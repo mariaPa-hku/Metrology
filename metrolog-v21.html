@@ -1,0 +1,2584 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Метролог.ПРО</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',sans-serif;background:#f5f5f7;color:#1d1d1f;min-height:100vh;line-height:1.47}
+::-webkit-scrollbar{width:0}
+
+/* ─ Design tokens ─ */
+:root{
+  --bg:#EEF2FB;--w:#fff;--t1:#0A1A3C;--t2:#3A5080;--t3:#7A92B8;
+  --blue:#003F8A;--bh:#002D6B;--green:#1A7D3E;--red:#CC1F1F;--rh:#AA1515;--orange:#C26E00;--purple:#4A3AAA;
+  --br:rgba(0,63,138,.1);--brm:rgba(0,63,138,.18);
+  --sh0:0 1px 3px rgba(0,0,0,.06);
+  --sh1:0 2px 12px rgba(0,40,100,.08),0 1px 3px rgba(0,0,0,.04);
+  --sh2:0 4px 28px rgba(0,40,100,.1),0 1px 6px rgba(0,0,0,.05);
+  --sh3:0 8px 48px rgba(0,40,100,.13),0 2px 14px rgba(0,0,0,.06);
+  --r:18px;--rsm:12px;--rlg:22px;--pill:980px;
+}
+
+/* ─ Page transition ─ */
+#root{animation:fadein .22s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ─ Nav ─ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:#fff;
+  backdrop-filter:saturate(140%) blur(16px);-webkit-backdrop-filter:saturate(140%) blur(16px);
+  border-bottom:1px solid rgba(0,63,138,.14);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.nav::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(to right,#fff 33%,#003F8A 33%,#003F8A 67%,#CC1F1F 67%)}
+.nav-brand{display:flex;align-items:center;gap:7px;cursor:pointer}
+.nav-hex{font-size:17px;color:var(--blue)}
+.nav-name{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.nav-dot{color:var(--red)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-user{font-size:13px;color:var(--t2)}
+
+/* ─ Layout ─ */
+.page{min-height:100vh;padding-top:52px}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.slim{max-width:720px;margin:0 auto;padding:0 24px}
+.mid{max-width:840px;margin:0 auto;padding:0 24px}
+
+/* ─ Cards ─ */
+.card{background:var(--w);border-radius:var(--r);box-shadow:var(--sh1)}
+.card-lg{background:var(--w);border-radius:var(--rlg);box-shadow:var(--sh2)}
+.card-inset{background:var(--bg);border-radius:var(--rsm);border:1px solid var(--br)}
+.card-glass{background:rgba(255,255,255,.7);backdrop-filter:blur(20px);border-radius:var(--r);border:1px solid rgba(255,255,255,.5);box-shadow:var(--sh1)}
+
+/* ─ Buttons ─ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:inherit;line-height:1;transition:all .15s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.btn:disabled{opacity:.32;pointer-events:none}
+.btn-full{width:100%}
+.btn-p{background:var(--blue);color:#fff;border-radius:var(--pill);padding:14px 22px;font-size:17px;font-weight:400}
+.btn-p:hover{background:var(--bh)}.btn-p:active{transform:scale(.98)}
+.btn-psm{background:var(--blue);color:#fff;border-radius:var(--pill);padding:10px 18px;font-size:15px}
+.btn-psm:hover{background:var(--bh)}
+.btn-pg{background:rgba(0,113,227,.1);color:var(--blue);border-radius:var(--pill);padding:10px 18px;font-size:15px}
+.btn-pg:hover{background:rgba(0,113,227,.16)}
+.btn-g{background:transparent;color:var(--t2);border-radius:var(--pill);padding:10px 18px;font-size:15px;border:1px solid var(--br)}
+.btn-g:hover{background:rgba(0,0,0,.04)}
+.btn-gsm{background:transparent;color:var(--t2);border-radius:var(--pill);padding:8px 15px;font-size:13px;border:1px solid var(--br)}
+.btn-gsm:hover{background:rgba(0,0,0,.04)}
+.btn-green{background:var(--green);color:#fff;border-radius:var(--pill);padding:14px 22px;font-size:17px}
+.btn-purple{background:var(--purple);color:#fff;border-radius:var(--pill);padding:10px 18px;font-size:15px}
+.btn-purple:hover{background:#9b44ca}
+.btn-red{background:var(--red);color:#fff;border-radius:var(--pill);padding:10px 18px;font-size:15px}
+
+/* ─ Inputs ─ */
+.field{margin-bottom:16px}
+.flbl{display:block;font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.inp{width:100%;padding:13px 16px;background:var(--bg);border:1.5px solid var(--br);border-radius:14px;color:var(--t1);font-size:17px;font-family:inherit;outline:none;transition:border .15s,box-shadow .15s}
+.inp:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(0,113,227,.12)}
+.inp::placeholder{color:var(--t3)}
+.inp-sm{padding:10px 14px;font-size:15px;border-radius:12px}
+textarea.inp{resize:vertical;min-height:120px;line-height:1.5}
+
+/* ─ Segmented control ─ */
+.seg{display:flex;background:rgba(0,0,0,.06);border-radius:12px;padding:3px;gap:2px}
+.seg-btn{flex:1;padding:8px;border:none;background:transparent;border-radius:10px;font-size:14px;font-weight:500;font-family:inherit;color:var(--t2);cursor:pointer;transition:all .15s}
+.seg-btn.on{background:var(--w);color:var(--t1);box-shadow:var(--sh0)}
+
+/* ─ Badges ─ */
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:var(--pill);font-size:12px;font-weight:600}
+.b-blue{background:rgba(0,113,227,.1);color:var(--blue)}
+.b-green{background:rgba(40,205,65,.12);color:#1a7f2e}
+.b-red{background:rgba(255,59,48,.1);color:#c00}
+.b-orange{background:rgba(255,149,0,.1);color:#7a4000}
+.b-gray{background:rgba(0,0,0,.06);color:var(--t2)}
+.b-purple{background:rgba(175,82,222,.1);color:#7b2fbe}
+.b-easy{background:rgba(40,205,65,.1);color:#1a7f2e}
+.b-med{background:rgba(255,149,0,.1);color:#7a4000}
+.b-hard{background:rgba(255,59,48,.1);color:#c00}
+.b-type{background:rgba(0,0,0,.06);color:var(--t2)}
+
+/* ─ Progress bar ─ */
+.pbar{height:4px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden}
+.pfill{height:100%;background:var(--blue);border-radius:4px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* ─ Option cards ─ */
+.opt{width:100%;text-align:left;padding:15px 18px;border-radius:14px;border:1.5px solid var(--br);background:var(--w);color:var(--t1);cursor:pointer;font-size:16px;font-family:inherit;display:flex;align-items:flex-start;gap:14px;transition:all .14s;line-height:1.5}
+.opt:hover{border-color:rgba(0,113,227,.4);background:rgba(0,113,227,.03);box-shadow:var(--sh0)}
+.opt.sel{border-color:var(--blue);background:rgba(0,113,227,.06)}
+.opt.ok{border-color:var(--green);background:rgba(40,205,65,.07);color:#1a7f2e;cursor:default}
+.opt.no{border-color:var(--red);background:rgba(255,59,48,.05);color:#c00;cursor:default}
+.okey{min-width:28px;height:28px;border-radius:50%;border:1.5px solid var(--brm);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:monospace;flex-shrink:0;color:var(--t2);margin-top:1px;transition:all .14s}
+.opt.sel .okey{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt.ok .okey{background:var(--green);border-color:var(--green);color:#fff}
+.opt.no .okey{background:var(--red);border-color:var(--red);color:#fff}
+
+/* ─ Protocol ─ */
+.proto-wrap{background:#fafafa;border:1px solid rgba(0,0,0,.07);border-radius:14px;padding:14px;overflow:hidden}
+.ptb{width:100%;border-collapse:collapse;font-size:14px}
+.ptb td{padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06)}
+.ptb tr:last-child td{border-bottom:none}
+.ptb td:first-child{color:var(--t2);width:50%}
+.ptb td:last-child{font-weight:600}
+.ptb tr.err{background:rgba(204,31,31,.07)}
+.ptb tr.err td{color:#8B0000 !important;font-weight:500}
+.ptb tr.err td:last-child{font-weight:700}
+
+/* ─ Info boxes ─ */
+.explain{background:rgba(0,113,227,.06);border-radius:14px;padding:16px 18px;font-size:15px;color:var(--t1);line-height:1.65;border:1px solid rgba(0,113,227,.14)}
+.explain b{color:var(--blue)}
+.hintbox{background:rgba(255,149,0,.08);border-radius:14px;padding:13px 16px;font-size:14px;color:#7a4000;border:1px solid rgba(255,149,0,.18);display:flex;gap:10px;align-items:flex-start}
+.info-box{background:rgba(0,113,227,.06);border-radius:12px;padding:12px 16px;font-size:14px;color:#004aad;border:1px solid rgba(0,113,227,.12);margin:12px 0}
+.warn-box{background:rgba(255,149,0,.08);border-radius:12px;padding:12px 16px;font-size:14px;color:#7a4000;border:1px solid rgba(255,149,0,.18);margin:12px 0}
+.success-box{background:rgba(40,205,65,.07);border-radius:12px;padding:12px 16px;font-size:14px;color:#1a7f2e;border:1px solid rgba(40,205,65,.2);margin:12px 0}
+
+/* ─ Pipeline ─ */
+.pipeline{display:flex;align-items:center}
+.pipe-step{text-align:center;min-width:90px}
+.pipe-node{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:monospace;margin:0 auto 10px}
+.pipe-node.done{background:var(--green);color:#fff}
+.pipe-node.act{border:2px solid var(--blue);color:var(--blue);background:var(--w)}
+.pipe-node.lock{background:rgba(0,0,0,.07);color:var(--t3)}
+.pipe-line{flex:1;height:2px;background:rgba(0,0,0,.08);margin:0 12px;margin-bottom:26px}
+.pipe-line.done{background:var(--green)}
+
+/* ─ Module grid ─ */
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.mcard{background:var(--w);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--sh0);border:1px solid var(--br);transition:box-shadow .2s,transform .18s;cursor:default}
+.mcard:hover{box-shadow:var(--sh1);transform:translateY(-2px)}
+.mcard.mc-active{border-color:rgba(0,113,227,.2);background:linear-gradient(145deg,rgba(0,113,227,.03),var(--w))}
+.mcard.mc-done{border-color:rgba(40,205,65,.25);background:linear-gradient(145deg,rgba(40,205,65,.04),var(--w))}
+.mcard.mc-purple{border-color:rgba(175,82,222,.22);background:linear-gradient(145deg,rgba(175,82,222,.04),var(--w))}
+.mcard.mc-lock{opacity:.5;pointer-events:none}
+
+/* ─ Stat cards ─ */
+.stat-card{background:var(--bg);border-radius:var(--rsm);padding:16px;text-align:center}
+.stat-val{font-size:28px;font-weight:700;font-family:monospace;letter-spacing:-.3px}
+.stat-lbl{font-size:12px;color:var(--t2);margin-top:5px;font-weight:500}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+/* ─ Review ─ */
+.rev{padding:16px 18px;background:var(--w);border-radius:14px;display:flex;gap:14px;border:1px solid var(--br)}
+.rev.ok{border-color:rgba(40,205,65,.22)}
+.rev.no{border-color:rgba(255,59,48,.18)}
+.rev-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* ─ Toast (iOS-style bottom center) ─ */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:999;
+  padding:13px 22px;border-radius:var(--pill);font-size:15px;font-weight:500;
+  display:none;box-shadow:var(--sh3);backdrop-filter:blur(20px);
+  animation:toastin .28s cubic-bezier(.4,0,.2,1)}
+@keyframes toastin{from{transform:translate(-50%,14px);opacity:0}to{transform:translateX(-50%);opacity:1}}
+.t-ok{background:rgba(28,28,30,.92);color:#fff}
+.t-err{background:rgba(255,59,48,.92);color:#fff}
+.t-info{background:rgba(0,113,227,.92);color:#fff}
+
+/* ─ Dots ─ */
+.dots{display:flex;gap:5px;flex-wrap:wrap;max-width:160px;justify-content:flex-end}
+.dot{width:8px;height:8px;border-radius:50%;border:none;padding:0;cursor:pointer;transition:background .15s}
+
+/* ─ Typography helpers ─ */
+.eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--t2)}
+.display{font-size:52px;font-weight:700;letter-spacing:-.5px;line-height:1.08}
+.h1{font-size:36px;font-weight:700;letter-spacing:-.4px;line-height:1.12}
+.h2{font-size:26px;font-weight:700;letter-spacing:-.3px;line-height:1.18}
+.h3{font-size:20px;font-weight:700;letter-spacing:-.2px;line-height:1.24}
+.body{font-size:17px;line-height:1.47}
+.body-sm{font-size:15px;line-height:1.53}
+.caption{font-size:12px;color:var(--t3)}
+.mono{font-family:'SF Mono',Menlo,Consolas,monospace}
+
+/* ─ Landing page ─ */
+.hero{min-height:calc(100vh - 52px);display:flex;align-items:center;position:relative;overflow:hidden;background:#fff}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;
+  filter:blur(90px) saturate(220%) brightness(1.05);
+  opacity:0;transition:opacity 1.4s ease;pointer-events:none;z-index:0}
+.hero-canvas.ready{opacity:1}
+.hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(255,255,255,0) 30%,rgba(255,255,255,.55) 100%)}
+.hero-content{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:80px 24px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.hero-eyebrow{font-size:17px;font-weight:500;color:var(--blue);margin-bottom:16px}
+.hero-title{font-size:56px;font-weight:700;letter-spacing:-.5px;line-height:1.06;margin-bottom:20px}
+.hero-sub{font-size:21px;color:var(--t2);line-height:1.42;margin-bottom:32px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero-visual{display:flex;flex-direction:column;gap:12px}
+.hero-card{background:rgba(255,255,255,.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px;padding:20px 22px;box-shadow:0 4px 32px rgba(0,40,100,.1),0 1px 4px rgba(0,0,0,.04);border:1px solid rgba(255,255,255,.9)}
+.hero-card-icon{font-size:28px;margin-bottom:10px}
+.feature-strip{background:var(--bg);padding:80px 0}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feature-card{background:var(--w);border-radius:var(--r);padding:28px;box-shadow:var(--sh0)}
+.feature-icon{font-size:32px;margin-bottom:16px}
+.nd-strip{background:#fff;padding:40px 0;border-top:1px solid var(--br)}
+.nd-tags{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.nd-tag{padding:8px 18px;border-radius:var(--pill);background:var(--bg);font-size:13px;font-weight:600;color:var(--t2);border:1px solid var(--br)}
+
+/* ─ Learning sidebar ─ */
+.learn-layout{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+.sidebar{position:sticky;top:68px}
+.lesson-item{display:flex;gap:10px;align-items:center;padding:11px 14px;border-radius:var(--rsm);cursor:pointer;transition:all .14s;border:1px solid transparent}
+.lesson-item:hover{background:var(--w);box-shadow:var(--sh0);border-color:var(--br)}
+.lesson-item.on{background:var(--w);box-shadow:var(--sh1);border-color:rgba(0,113,227,.2)}
+.lesson-item.done-l{border-color:rgba(40,205,65,.18)}
+.lnum{min-width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:monospace;color:var(--t2);flex-shrink:0}
+.lnum.ln-done{background:var(--green);color:#fff}
+.lnum.ln-on{background:var(--blue);color:#fff}
+
+/* ─ Theory blocks ─ */
+.theory{background:var(--w);border-radius:var(--r);padding:22px;margin-bottom:14px;font-size:15px;line-height:1.7;border:1px solid var(--br)}
+.theory h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:10px;margin-top:18px}
+.theory h4:first-child{margin-top:0}
+.theory p{margin-bottom:10px}
+.theory p:last-child{margin-bottom:0}
+.formula{background:rgba(0,113,227,.06);border-radius:12px;padding:14px 18px;font-family:monospace;font-size:15px;color:#004aad;margin:12px 0;border:1px solid rgba(0,113,227,.14)}
+.nd-chip{display:inline-flex;padding:4px 12px;border-radius:var(--pill);font-size:12px;font-weight:600;background:rgba(0,113,227,.09);color:var(--blue);margin-bottom:14px}
+.ktable{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;border-radius:10px;overflow:hidden}
+.ktable th{padding:8px 12px;background:var(--bg);color:var(--t2);text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--br)}
+.ktable td{padding:9px 12px;border-bottom:1px solid var(--br);color:var(--t1)}
+.ktable td:last-child{font-weight:600;font-family:monospace}
+.ktable tr:last-child td{border-bottom:none}
+.case-section{border-top:1px solid var(--br);padding-top:24px;margin-top:24px}
+.ps-strip{display:flex;gap:4px;margin-bottom:14px}
+
+/* ─ Certificate ─ */
+.cert-card{background:var(--w);border-radius:var(--rlg);padding:56px 48px;text-align:center;box-shadow:var(--sh3);position:relative;overflow:hidden}
+.cert-bg{position:absolute;inset:0;background:linear-gradient(145deg,rgba(0,113,227,.03),rgba(175,82,222,.03));pointer-events:none}
+.cert-wm{position:absolute;font-size:280px;color:rgba(0,113,227,.04);top:50%;left:50%;transform:translate(-50%,-53%);user-select:none;line-height:1;pointer-events:none}
+
+/* ─ Admin panel ─ */
+.admin-section{background:var(--w);border-radius:var(--r);padding:24px;margin-bottom:16px;border:1px solid var(--br)}
+.admin-q{background:var(--bg);border-radius:14px;padding:16px 18px;margin-bottom:10px;border:1px solid var(--br)}
+.admin-q-num{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:6px}
+
+/* ─ Profile ─ */
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(145deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff;flex-shrink:0}
+.profile-stat{background:var(--bg);border-radius:14px;padding:16px;text-align:center}
+
+/* ─ Utils ─ */
+.flex{display:flex;align-items:center;gap:12px}
+.between{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.col{display:flex;flex-direction:column;gap:10px}
+.g4{gap:4px}.g6{gap:6px}.g8{gap:8px}
+.ta-c{text-align:center}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mt24{margin-top:24px}.mt32{margin-top:32px}.mt40{margin-top:40px}.mt48{margin-top:48px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.mb20{margin-bottom:20px}.mb24{margin-bottom:24px}.mb32{margin-bottom:32px}
+.fw5{font-weight:500}.fw6{font-weight:600}.fw7{font-weight:700}
+.f11{font-size:11px}.f12{font-size:12px}.f13{font-size:13px}.f15{font-size:15px}.f17{font-size:17px}.f19{font-size:19px}
+.c-blue{color:var(--blue)}.c-green{color:var(--green)}.c-red{color:var(--red)}.c-t2{color:var(--t2)}.c-t3{color:var(--t3)}.c-purple{color:var(--purple)}
+.score-xl{font-size:72px;font-weight:700;letter-spacing:-.5px;line-height:1;font-family:monospace}
+.divider{height:1px;background:var(--br);margin:24px 0}
+.tag-strip{display:flex;gap:6px;flex-wrap:wrap}
+
+@media(max-width:700px){
+  .hero-content{grid-template-columns:1fr;gap:40px}
+  .hero-visual{display:none}
+  .hero-title{font-size:38px}
+  .feature-grid{grid-template-columns:1fr}
+  .learn-layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .mod-grid{grid-template-columns:1fr}
+  .wrap,.slim,.mid{padding:0 16px}
+  .pipeline{flex-direction:column;gap:4px}
+  .pipe-line{width:2px;height:20px;flex:none;margin:2px auto}
+  .cert-card{padding:36px 22px}
+  .display{font-size:36px}
+  .h1{font-size:28px}
+}
+
+/* ── ND интерактивные карточки ─────────────────────── */
+.nd-cards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.nd-card{background:var(--w);border:1.5px solid var(--br);border-radius:var(--r);
+  padding:20px 24px;cursor:pointer;text-align:left;min-width:260px;max-width:320px;
+  transition:all .2s;position:relative;overflow:hidden}
+.nd-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+.nd-card.red::before{background:var(--red)}
+.nd-card:hover{border-color:var(--blue);box-shadow:var(--sh2);transform:translateY(-2px)}
+.nd-card.red:hover{border-color:var(--red)}
+.nd-card-code{font-size:15px;font-weight:900;letter-spacing:-.2px;color:var(--blue);margin-bottom:6px}
+.nd-card.red .nd-card-code{color:var(--red)}
+.nd-card-title{font-size:13px;color:var(--t2);line-height:1.4;margin-bottom:12px}
+.nd-card-hint{font-size:12px;font-weight:600;color:var(--blue);display:flex;align-items:center;gap:4px}
+.nd-card.red .nd-card-hint{color:var(--red)}
+
+/* ── ND модал с подсветками ────────────────────────── */
+.nd-overlay{position:fixed;inset:0;z-index:800;display:flex;align-items:flex-start;justify-content:flex-end;
+  background:rgba(0,0,0,.35);backdrop-filter:blur(4px);animation:fadein .2s ease}
+.nd-panel{width:min(560px,95vw);height:100vh;background:var(--w);overflow-y:auto;
+  box-shadow:var(--sh3);animation:slidein .28s cubic-bezier(.4,0,.2,1)}
+@keyframes slidein{from{transform:translateX(100%)}to{transform:none}}
+.nd-panel-hdr{position:sticky;top:0;z-index:10;background:var(--w);
+  border-bottom:1px solid var(--br);padding:20px 24px;display:flex;align-items:center;gap:12px}
+.nd-panel-body{padding:24px}
+.nd-section{margin-bottom:20px}
+.nd-section-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--t3);margin-bottom:10px}
+.nd-hl{border-radius:10px;padding:12px 14px;margin-bottom:8px;border-left:3px solid transparent}
+.nd-hl-red{background:rgba(204,31,31,.08);border-color:#CC1F1F}
+.nd-hl-blue{background:rgba(0,63,138,.07);border-color:#003F8A}
+.nd-hl-amber{background:rgba(194,110,0,.08);border-color:#C26E00}
+.nd-hl-green{background:rgba(26,125,62,.07);border-color:#1A7D3E}
+.nd-hl-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.nd-hl-red .nd-hl-title{color:#AA1515}
+.nd-hl-blue .nd-hl-title{color:#003F8A}
+.nd-hl-amber .nd-hl-title{color:#7A4000}
+.nd-hl-green .nd-hl-title{color:#1A7D3E}
+.nd-hl-text{font-size:13px;color:var(--t1);line-height:1.6}
+.nd-hl-ref{font-size:11px;color:var(--t3);margin-top:5px;font-style:italic}
+
+/* ── Chat Widget ─────────────────────────────────────── */
+.chat-fab{position:fixed;bottom:28px;right:28px;z-index:900;width:58px;height:58px;border-radius:50%;
+  background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:22px;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 20px rgba(0,63,138,.45),0 1px 6px rgba(0,0,0,.12);
+  animation:fab-glow 3s ease-in-out infinite}
+.chat-fab:hover{transform:scale(1.1)}
+.chat-fab.unread::after{content:'';position:absolute;top:3px;right:3px;width:12px;height:12px;
+  border-radius:50%;background:var(--red);border:2px solid #fff}
+@keyframes fab-glow{
+  0%,100%{box-shadow:0 4px 20px rgba(0,63,138,.45)}
+  50%{box-shadow:0 4px 36px rgba(0,63,138,.7),0 0 0 10px rgba(0,63,138,.08)}}
+
+.chat-panel{position:fixed;bottom:100px;right:28px;z-index:899;width:366px;
+  background:#fff;border-radius:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.15),0 4px 16px rgba(0,0,0,.07);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:all .32s cubic-bezier(.4,0,.2,1);
+  transform:translateY(28px) scale(.93);opacity:0;pointer-events:none;
+  max-height:560px;border:1px solid rgba(0,0,0,.06)}
+.chat-panel.open{transform:none;opacity:1;pointer-events:all}
+
+.chat-hdr{display:flex;align-items:center;gap:12px;padding:16px 18px;
+  background:rgba(0,63,138,.05);border-bottom:1px solid rgba(0,63,138,.1)}
+.chat-av{width:38px;height:38px;border-radius:50%;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  box-shadow:0 2px 8px rgba(0,63,138,.3);flex-shrink:0}
+.chat-hdr-info .chat-nm{font-weight:700;font-size:15px;color:var(--t1)}
+.chat-hdr-info .chat-st{font-size:12px;color:var(--t3);display:flex;align-items:center;gap:5px;margin-top:2px}
+.chat-hdr-info .chat-st::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+.chat-x{margin-left:auto;border:none;background:rgba(0,0,0,.06);cursor:pointer;
+  font-size:13px;color:var(--t2);width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;transition:background .14s}
+.chat-x:hover{background:rgba(0,0,0,.12)}
+
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;
+  min-height:220px;max-height:320px;scroll-behavior:smooth}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:rgba(0,0,0,.1);border-radius:2px}
+
+.cmsg{display:flex;gap:8px;align-items:flex-end;animation:msg-in .22s ease}
+.cmsg.user{flex-direction:row-reverse}
+@keyframes msg-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cbubble{padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.55;max-width:82%}
+.cbubble.bot{background:#f1f0f5;color:var(--t1);border-radius:18px 18px 18px 4px}
+.cbubble.user{background:var(--blue);color:#fff;border-radius:18px 18px 4px 18px}
+.cmsg-av{width:28px;height:28px;border-radius:50%;background:var(--blue);
+  font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.chat-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;
+  background:#f1f0f5;border-radius:18px 18px 18px 4px;width:fit-content}
+.chat-typing span{width:7px;height:7px;border-radius:50%;background:var(--t3);
+  animation:tdot 1.4s ease-in-out infinite}
+.chat-typing span:nth-child(2){animation-delay:.2s}
+.chat-typing span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{transform:scale(.55);opacity:.35}40%{transform:scale(1);opacity:1}}
+
+.chat-qrs{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px 12px;border-top:1px solid rgba(0,0,0,.06)}
+.chat-qr{padding:7px 13px;border-radius:var(--pill);
+  border:1.5px solid rgba(0,63,138,.28);background:rgba(0,63,138,.06);
+  color:var(--blue);font-size:13px;font-weight:500;cursor:pointer;
+  transition:all .14s;font-family:inherit;line-height:1}
+.chat-qr:hover{background:rgba(0,63,138,.14);border-color:var(--blue)}
+
+.chat-inp-row{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  border-top:1px solid rgba(0,0,0,.07)}
+.chat-inp{flex:1;padding:9px 14px;background:rgba(0,0,0,.05);border:none;
+  border-radius:var(--pill);font-size:14px;font-family:inherit;outline:none;color:var(--t1)}
+.chat-inp:focus{background:rgba(0,0,0,.07)}
+.chat-inp::placeholder{color:var(--t3)}
+.chat-snd{width:34px;height:34px;border-radius:50%;background:var(--blue);border:none;
+  cursor:pointer;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;
+  transition:background .14s,transform .12s;flex-shrink:0}
+.chat-snd:hover{background:var(--bh);transform:scale(1.05)}
+.chat-snd:disabled{background:rgba(0,0,0,.12);cursor:default;transform:none}
+@media(max-width:480px){.chat-panel{width:calc(100vw - 32px);right:16px;bottom:88px}.chat-fab{right:16px;bottom:20px}}
+
+.ea-wrap{max-width:700px;margin:0 auto;padding:32px 24px 80px}
+.ea-prog{display:flex;gap:4px;margin-bottom:20px}
+.ea-pd{flex:1;height:4px;border-radius:2px;background:rgba(0,0,0,.1);transition:background .25s}
+.ea-pd.done{background:var(--blue)}.ea-pd.cur{background:rgba(0,63,138,.35)}
+.self-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.self-btn{padding:20px 12px;border-radius:var(--r);border:2px solid var(--br);background:var(--w);cursor:pointer;font-family:inherit;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:10px}
+.self-btn:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.sb-know{border-color:var(--green);background:rgba(40,205,65,.07)}
+.sb-doubt{border-color:var(--orange);background:rgba(255,149,0,.07)}
+.sb-dont{border-color:var(--red);background:rgba(204,31,31,.07)}
+.plan-row{padding:14px 16px;border-radius:12px;border:1.5px solid var(--br);background:var(--w);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.pr-critical{border-color:rgba(204,31,31,.4);background:rgba(204,31,31,.04)}
+.pr-study{border-color:rgba(255,149,0,.3);background:rgba(255,149,0,.04)}
+.pr-check{border-color:rgba(88,86,214,.25);background:rgba(88,86,214,.03)}
+.pr-reinforce{border-color:rgba(0,63,138,.2);background:rgba(0,63,138,.03)}
+.pr-strong{border-color:rgba(40,205,65,.2);background:rgba(40,205,65,.03);opacity:.7}
+
+@media print{
+  .nav,.btn{display:none!important}
+  .cert-card{box-shadow:none!important}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="chat-root"></div>
+<div id="nd-overlay-root"></div>
+<div id="toast"></div>
+<script>
+
+const EQ=[
+  {id:1,
+   t:"В течение какого времени с момента ввода МХ ответственный от ОСТ направляет в СГМ и ЦОМ протокол поверки и фотоотчёт с результатами ввода коэффициентов во вторичную аппаратуру?",
+   a:"5 часов",b:"2 часов",c:"1 часа",d:"3 часов",k:"d",
+   x:"Ответственный от ОСТ обязан направить протокол поверки и фотоотчёт в СГМ и ЦОМ в течение 3 часов с момента ввода метрологических характеристик."},
+  {id:2,
+   t:"Что происходит при выявлении несоответствий во внесённых в СОИ СИКН МХ СИ оформленным результатам поверки?",
+   a:"Главный метролог организует устранение замечаний и направление исправленного документа на ПСП",
+   b:"Начальник ЦОМ организует устранение замечаний и направление исправленного документа на ПСП",
+   c:"Главный метролог направляет исправленный документ на ПСП",
+   d:"Ответственный представитель от ОСТ, находящийся на объекте, организует устранение замечаний и исправление документа",
+   k:"a",
+   x:"При выявлении несоответствий именно Главный метролог организует устранение замечаний и направление исправленного документа на ПСП."},
+  {id:3,
+   t:"Что такое пикнометр?",
+   a:"Специальный прибор для измерения вязкости (внутреннего трения) и текучести жидких или газообразных веществ",
+   b:"Высокоточный лабораторный сосуд с точно калиброванным объёмом, предназначенный для измерения плотности жидких, твёрдых, сыпучих и газообразных веществ",
+   c:"Промышленный прибор, который в режиме реального времени измеряет плотность и преобразует данные в нормированный электрический сигнал",
+   d:"Промышленный прибор для непрерывного измерения плотности жидкости или газа прямо в потоке, без отбора проб",
+   k:"b",
+   x:"Пикнометр — высокоточный лабораторный сосуд с калиброванным объёмом. Варианты в и г описывают поточные преобразователи плотности, вариант а — вискозиметр."},
+];
+// ══════════════════════════════════════════════════════════
+// CQ — 15 вопросов контрольного теста
+// ══════════════════════════════════════════════════════════
+const CQ=[
+  {id:1,t:"Расширенная неопределённость при k=2 соответствует доверительной вероятности:",a:"68%",b:"90%",c:"95%",d:"99%",k:"c",x:"k=2→P≈95% (нормальное распределение). В протоколе обязательно указывать k."},
+  {id:2,t:"Поправка на влияние давления для вибрационного ПЧ на каждый МПа составляет:",a:"0,01%",b:"0,02%",c:"0,1%",d:"0,5%",k:"b",x:"≈0,02%/МПа. При 2,5 МПа и ρ=900 кг/м³ поправка≈0,45 кг/м³ — значимо для класса 0,1."},
+  {id:3,t:"ПЧ НЕ прошёл поверку по вариации, если:",a:"Вариация>0,5×Δдоп",b:"Вариация>Δдоп",c:"Вариация>2×Δдоп",d:"Вариация не нормируется",k:"b",x:"ГОСТ Р 8.802-2012, п.8.3: брак при вариации, превышающей Δдоп."},
+  {id:4,t:"Плотность толуола при 20°C по ГОСТ 9880 составляет (кг/м³):",a:"860,0",b:"866,0",c:"867,9",d:"875,0",k:"c",x:"ρ(толуол,20°C)=867,9 кг/м³. Использование 860,0 даёт ошибку≈8 кг/м³."},
+  {id:5,t:"При t жидкости ≠ 20°C поверитель обязан:",a:"Перенести поверку до t=20°C",b:"Применить температурную поправку к ρ",c:"Принять ρ=1000,00 кг/м³",d:"Увеличить число измерений",k:"b",x:"Поправку берут из справочника: ρ(t)=ρ₀−α·(t−20). Перенос не всегда возможен."},
+  {id:6,t:"СКО серии n=5, σ=0,15 кг/м³. Случайная составляющая S=σ/√n равна:",a:"±0,150 кг/м³",b:"±0,067 кг/м³",c:"±0,030 кг/м³",d:"±0,300 кг/м³",k:"b",x:"S=0,15/√5=0,15/2,236≈0,067 кг/м³. Вносится в бюджет неопределённости."},
+  {id:7,t:"Аккредитованная лаборатория ОБЯЗАНА указать в протоколе:",a:"Только результат и погрешность",b:"Номер аттестата аккредитации",c:"ФИО руководителя владельца прибора",d:"Стоимость поверки",k:"b",x:"ФЗ №412-ФЗ и Приказ №2905 требуют номер аттестата в каждом протоколе."},
+  {id:8,t:"При неработающем встроенном датчике температуры ПЧ:",a:"Продолжить с внешним термометром",b:"Зафиксировать и направить в ремонт",c:"Применить расчётную поправку",d:"Оставить поле t пустым",k:"b",x:"Неработающая термокомпенсация — основание для отказа в поверке."},
+  {id:9,t:"Формула перехода δ(%)→абсолютная Δ:",a:"Δ=δ×X/100",b:"Δ=δ/X×100",c:"Δ=X/δ",d:"Δ=δ²/X",k:"a",x:"Δ=δ[%]×X/100. Например: δ=0,01%, X=900 кг/м³ → Δ=0,09 кг/м³."},
+  {id:10,t:"Влажность воздуха при поверке по ГОСТ Р 8.802 не должна превышать:",a:"60%",b:"70%",c:"80%",d:"Не нормируется",k:"c",x:"ГОСТ Р 8.802, п.7.1: 45–80%. Превышение — нарушение условий поверки."},
+  {id:11,t:"МПИ для Ex-ПЧ устанавливается:",a:"Как для обычных приборов",b:"По решению ГМС",c:"Всегда 6 месяцев",d:"Всегда 2 года",k:"b",x:"МПИ для Ex согласовывается с ГМС и может отличаться от стандартного."},
+  {id:12,t:"Свидетельство о поверке прекращает действие при:",a:"Истечении МПИ ИЛИ нарушении пломб",b:"Только при истечении МПИ",c:"Только при механическом повреждении",d:"Через 3 года",k:"a",x:"Оба условия независимы: истечение МПИ ИЛИ нарушение знаков поверки."},
+  {id:13,t:"Полный бюджет неопределённости поверки ПЧ включает:",a:"Только u эталона",b:"u эталона и u температуры",c:"u эталона, температуры, нестабильности и разрешения",d:"Только случайную составляющую",k:"c",x:"u_эт+u_t+u_нест+u_разр. Неполный бюджет — методическая ошибка."},
+  {id:14,t:"Метрологическая прослеживаемость — связь результата с:",a:"Аккредитованной лабораторией",b:"Национальным эталоном через цепь сличений",c:"Результатом другой лаборатории",d:"Записью в ФГИС «Аршин»",k:"b",x:"Цепь: прибор→рабочий эталон→эталон 1-го разряда→Государственный первичный эталон."},
+  {id:15,t:"Запись во ФГИС «Аршин» вносится не позднее:",a:"1 рабочего дня",b:"3 рабочих дней",c:"5 рабочих дней",d:"30 дней",k:"b",x:"Приказ №2905, п.31: в течение 3 рабочих дней с момента окончания поверки."},
+];
+// ══════════════════════════════════════════════════════════
+// CASES — 20 кейсов тренажёра ошибок
+// ══════════════════════════════════════════════════════════
+const CASES=[
+  {id:0,n:"МИ 2816-2012 · Протокол 1 — нестабильность температуры",d:1,y:"Протокол МИ 2816-2012",
+   r:[["НД на поверку","МИ 2816-2012",0],
+      ["Поверяемый ПП","Micro Motion CMF300, зав.№ 1107432",0],
+      ["Эталонный ПП","ПП-1/1 зав.№ 00214, св-во №8812 до 10.2024",0],
+      ["Рабочая жидкость","нефть сырая, СИКН-14",0],
+      ["Плотность нефти, кг/м³","856,4",0],
+      ["Давление в трубопроводе, МПа","2,1",0],
+      ["Температура нефти в начале, °С","41,2",0],
+      ["Температура нефти в конце, °С","42,8  ← Δt = 1,6 °С",1],
+      ["Изменение t за сеанс, °С (допустимо ≤ 0,2)","1,6",1],
+      ["Число синхронных пар измерений","5",0],
+      ["Δ среднее, кг/м³","0,08",0],
+      ["Заключение","ПРИГОДЕН",0]],
+   o:["Ошибка в числе измерений — нужно не менее 10 пар",
+      "Нестабильность температуры 1,6 °С превышает допустимое значение ±0,2 °С (МИ 2816-2012, р.7) — поверка недействительна",
+      "Ошибка: не применены коэффициенты CTL и CPL",
+      "Протокол составлен верно, ошибок нет"],
+   a:1,h:"Какое допустимое изменение температуры нефти за один сеанс по МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 7: изменение температуры нефти в процессе измерений не должно превышать ±0,2 °С. При Δt = 1,6 °С условия поверки нарушены — результаты недействительны.",
+   f:"МИ 2816-2012, р.7"},
+  {id:1,n:"МИ 2816-2012 · Протокол 2 — три пары вместо пяти",d:1,y:"Протокол МИ 2816-2012",
+   r:[["НД на поверку","МИ 2816-2012",0],
+      ["Поверяемый ПП","Rheonik RHM 015, зав.№ 20953",0],
+      ["Эталонный ПП","ЭПП-2, зав.№ 00451, св-во №9034",0],
+      ["Рабочая жидкость","дизельное топливо",0],
+      ["Плотность, кг/м³","831,7",0],
+      ["Температура нефти, °С","18,4 → 18,5 (Δt = 0,1 °С)",0],
+      ["Давление, МПа","1,4",0],
+      ["Число синхронных пар измерений в точке","3  ← менее 5",1],
+      ["Показания ПП (кг/м³): пары 1–3","831,6 / 831,8 / 831,7",0],
+      ["Показания эталона (кг/м³): пары 1–3","831,5 / 831,6 / 831,5",0],
+      ["Δ, кг/м³","0,12",0],
+      ["Заключение","ПРИГОДЕН",0]],
+   o:["Ошибка в единицах плотности — должно быть г/л",
+      "Число синхронных пар 3 меньше минимально допустимого (5) по МИ 2816-2012, р.9 — результат статистически недостоверен",
+      "Ошибка: температура нефти выходит за допустимый диапазон",
+      "Протокол составлен верно"],
+   a:1,h:"Сколько синхронных пар измерений требует МИ 2816-2012 в каждой точке расхода?",
+   e:"МИ 2816-2012, раздел 9: в каждой точке рабочего диапазона расхода выполняют не менее 5 синхронных пар измерений. При 3 парах статистическая достоверность не обеспечена.",
+   f:"МИ 2816-2012, р.9"},
+  {id:2,n:"МИ 2816-2012 · Протокол 3 — эталон той же точности",d:2,y:"Протокол МИ 2816-2012",
+   r:[["НД на поверку","МИ 2816-2012",0],
+      ["Поверяемый ПП","Endress+Hauser Promass 83, зав.№ C301117",0],
+      ["Δдоп поверяемого ПП, кг/м³","±0,3",0],
+      ["Эталонный ПП","ПП-РЭ, зав.№ 11042",0],
+      ["Δ эталонного ПП, кг/м³","±0,3  ← не в 2–3 раза меньше",1],
+      ["Соотношение точностей","1:1 (должно быть 1:2–1:3)",1],
+      ["Рабочая жидкость","нефть сырая",0],
+      ["Температура, °С","38,2 → 38,3",0],
+      ["Число пар измерений","5",0],
+      ["Δ, кг/м³","0,18",0],
+      ["Заключение","ПРИГОДЕН",0]],
+   o:["Ошибка в числе точек расхода — нужно не менее трёх",
+      "Не выполнено приведение по CTL и CPL",
+      "Погрешность эталонного ПП (±0,3) не меньше погрешности поверяемого (±0,3) — нарушение требований МИ 2816-2012, р.5",
+      "Нарушение: температура вышла за пределы диапазона"],
+   a:2,h:"Каким должен быть предел погрешности эталонного ПП по отношению к поверяемому?",
+   e:"МИ 2816-2012, раздел 5: погрешность эталонного ПП должна быть в 2–3 раза меньше предела допускаемой погрешности поверяемого. При одинаковой точности обоих ПП поверка метрологически некорректна.",
+   f:"МИ 2816-2012, р.5"},
+  {id:3,n:"МИ 2816-2012 · Протокол 4 — CTL и CPL не применены",d:3,y:"Протокол МИ 2816-2012",
+   r:[["НД на поверку","МИ 2816-2012",0],
+      ["Поверяемый ПП","Krohne Optimass 7300, зав.№ 40881",0],
+      ["Рабочая жидкость","нефть сырая",0],
+      ["Температура нефти, °С","54,6",0],
+      ["Давление, МПа","3,2",0],
+      ["Показание поверяемого ПП, кг/м³","847,3",0],
+      ["Показание эталонного ПП, кг/м³","847,1",0],
+      ["Приведение к станд. условиям (CTL, CPL)","не выполнено  ← при t=54,6°C и P=3,2 МПа",1],
+      ["Погрешность Δ = ρПП − ρЭ, кг/м³","0,2",0],
+      ["Заключение","ПРИГОДЕН",0]],
+   o:["Ошибка в давлении — превышен допустимый предел для данного ПП",
+      "Ошибка в числе измерений",
+      "При t = 54,6 °С и P = 3,2 МПа приведение показаний по CTL и CPL обязательно; без него прямое сравнение показаний некорректно",
+      "Протокол верен: при Δ = 0,2 кг/м³ прибор годен"],
+   a:2,h:"Когда обязательно применять CTL и CPL по МИ 2816-2012, Приложению А?",
+   e:"МИ 2816-2012, Приложение А: при отличии температуры от стандартной и ненулевом давлении показания обоих ПП должны быть приведены к единым условиям с применением CTL и CPL. Прямое сравнение при t = 54,6 °С и P = 3,2 МПа недопустимо.",
+   f:"МИ 2816-2012, Прил. А"},
+  {id:4,n:"МИ 2816-2012 · Протокол 5 — Δ превышает допуск, но ПРИГОДЕН",d:1,y:"Протокол МИ 2816-2012",
+   r:[["НД на поверку","МИ 2816-2012",0],
+      ["Поверяемый ПП","Emerson 8800, зав.№ 2209341",0],
+      ["Δдоп, кг/м³","±0,3",0],
+      ["Рабочая жидкость","мазут топочный",0],
+      ["Температура, °С","68,1 → 68,2",0],
+      ["Давление, МПа","1,8",0],
+      ["Δ в точке 1 расхода, кг/м³","0,28",0],
+      ["Δ в точке 2 расхода, кг/м³","0,34  ← превышает ±0,3",1],
+      ["Δ в точке 3 расхода, кг/м³","0,37  ← превышает ±0,3",1],
+      ["Заключение","ПРИГОДЕН  ← при Δ > Δдоп",1]],
+   o:["Ошибка: недостаточно точек расхода — нужно не менее пяти",
+      "Превышение допустимой погрешности в двух точках (0,34 и 0,37 > ±0,3) — ПП непригоден; выдача свидетельства ПРИГОДЕН недопустима",
+      "Ошибка: не указан тип рабочей жидкости",
+      "Незначительное превышение в двух точках допустимо по методике"],
+   a:1,h:"Что оформляется при превышении погрешностью допускаемого значения по МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 10: при превышении погрешности предела допускаемого значения хотя бы в одной точке ПП признаётся непригодным, свидетельство не выдаётся — только извещение о непригодности.",
+   f:"МИ 2816-2012, р.10"},
+  {id:5,n:"МИ 2403-97 · Протокол 6 — два измерения вместо трёх",d:1,y:"Протокол МИ 2403-97",
+   r:[["НД на поверку","МИ 2403-97",0],
+      ["Поверяемый ПП","Solartron 7835, зав.№ 900217",0],
+      ["Рабочий эталон","МДП-1, зав.№ 114, св-во №5501 до 08.2024",0],
+      ["Рабочая жидкость","нефть, СИКН-3",0],
+      ["Расход, м³/ч","0,8",0],
+      ["Температура нефти, °С","34,5",0],
+      ["Давление, МПа","2,6",0],
+      ["Число определений абс. погрешности","2  ← менее 3 (п.7.2.5)",1],
+      ["Δ₁, кг/м³","0,18",0],
+      ["Δ₂, кг/м³","0,21",0],
+      ["Заключение","ПРИГОДЕН",0]],
+   o:["Ошибка: расход 0,8 м³/ч вне допустимого диапазона",
+      "Число определений погрешности (2) меньше требуемого по МИ 2403-97, п.7.2.5 (не менее 3) — результат недостоверен",
+      "Ошибка: не заполнена таблица протокола по форме Приложения 2",
+      "Ошибка в расчёте D₀"],
+   a:1,h:"Сколько раз определяется абсолютная погрешность по МИ 2403-97?",
+   e:"МИ 2403-97, п.7.2.5: определение абсолютной погрешности поверяемого плотномера выполняют три раза. Двух измерений недостаточно.",
+   f:"МИ 2403-97, п.7.2.5"},
+  {id:6,n:"МИ 2403-97 · Протокол 7 — D₀ без поправки на t и P",d:3,y:"Протокол МИ 2403-97",
+   r:[["НД на поверку","МИ 2403-97",0],
+      ["Поверяемый ПП","Solartron 7830, зав.№ 880341",0],
+      ["Эталон (РЭ)","МДЛ-1, зав.№ 228",0],
+      ["Температура ПП, t, °С","42,3",0],
+      ["Давление ПП, P, МПа","2,8",0],
+      ["Температура РЭ, t₀, °С","38,9  ← Δt = 3,4 °С",0],
+      ["Давление РЭ, P₀, МПа","2,6",0],
+      ["ρ (показание ПП), кг/м³","864,5",0],
+      ["D₀ принято равным ρ₀ (без поправок β, γ)","863,8  ← формула (2) не применена",1],
+      ["Δ = ρ − D₀, кг/м³","0,7",0],
+      ["Заключение","НЕПРИГОДЕН",0]],
+   o:["Ошибка: не указан тип нефти",
+      "Заключение должно быть ПРИГОДЕН, поскольку Δ < 1 кг/м³",
+      "D₀ принято равным ρ₀ без приведения по температуре и давлению — формула 2 МИ 2403-97 не применена; погрешность рассчитана неверно",
+      "Ошибка в показании РЭ"],
+   a:2,h:"Как вычисляется D₀ в МИ 2403-97 при разных условиях у ПП и РЭ?",
+   e:"МИ 2403-97, р.8.1: D₀ = ρ₀·[1 + (β+C)(t₀−t) + γ(P−P₀)]. При t₀ ≠ t и P₀ ≠ P приведение обязательно. Принимать D₀ = ρ₀ без поправок нельзя — погрешность окажется завышенной или заниженной.",
+   f:"МИ 2403-97, р.8.1, формула (2)"},
+  {id:7,n:"МИ 2403-97 · Протокол 8 — изменение t нефти 0,5 °С за 5 мин",d:2,y:"Протокол МИ 2403-97",
+   r:[["НД на поверку","МИ 2403-97",0],
+      ["Поверяемый ПП","Solartron 7840, зав.№ 940088",0],
+      ["Рабочий эталон","МДП-2, зав.№ 117",0],
+      ["Расход нефти, м³/ч","0,7",0],
+      ["Температура нефти в начале 5 мин, °С","39,0",0],
+      ["Температура нефти в конце 5 мин, °С","39,5  ← Δ = 0,5 °С",1],
+      ["Изменение t за 5 мин (допустимо ≤ 0,1 °С)","0,5 °С",1],
+      ["Измерения начаты при нестабильном режиме","да",1],
+      ["Δ₁ / Δ₂ / Δ₃, кг/м³","0,21 / 0,25 / 0,19",0],
+      ["Заключение","ПРИГОДЕН",0]],
+   o:["Ошибка: расход выходит за диапазон 0,5–1 м³/ч",
+      "Изменение температуры нефти за 5 мин составило 0,5 °С, что превышает допустимое значение 0,1 °С (МИ 2403-97, р.5) — измерения проведены при недопустимых условиях",
+      "Ошибка: число измерений менее трёх",
+      "Ошибка в расчёте погрешности Δ"],
+   a:1,h:"Какое максимальное изменение температуры нефти допускается за 5 мин при поверке по МИ 2403-97?",
+   e:"МИ 2403-97, р.5: изменение температуры нефти в процессе измерений — не более 0,1 °С за 5 мин. При Δt = 0,5 °С режим нестабилен, начинать измерения запрещается.",
+   f:"МИ 2403-97, р.5"},
+  {id:8,n:"МИ 2403-97 · Протокол 9 — расход вне диапазона 0,5–1 м³/ч",d:1,y:"Протокол МИ 2403-97",
+   r:[["НД на поверку","МИ 2403-97",0],
+      ["Поверяемый ПП","Solartron 7835, зав.№ 910042",0],
+      ["Рабочий эталон","МДП-1, зав.№ 114",0],
+      ["Рабочая жидкость","нефть сырая",0],
+      ["Температура нефти, °С","28,3 → 28,4 (Δ = 0,1 °С за 5 мин)",0],
+      ["Давление, МПа","1,9",0],
+      ["Расход нефти в блоке качества, м³/ч","2,0  ← вне диапазона 0,5–1,0",1],
+      ["Δ₁, кг/м³","0,11",0],
+      ["Δ₂, кг/м³","0,14",0],
+      ["Δ₃, кг/м³","0,12",0],
+      ["Заключение","ПРИГОДЕН",0]],
+   o:["Ошибка: нестабильность температуры превышает 0,1 °С",
+      "Расход 2,0 м³/ч превышает допустимый диапазон 0,5–1,0 м³/ч (МИ 2403-97, р.7.2.2) — условия измерений нарушены",
+      "Ошибка в числе измерений",
+      "Ошибка: не выполнено приведение D₀"],
+   a:1,h:"В каком диапазоне расхода должна проводиться поверка по МИ 2403-97?",
+   e:"МИ 2403-97, р.7.2.2: расход нефти в блоке качества при поверке устанавливается в пределах от 0,5 до 1 м³/ч. При расходе 2,0 м³/ч условия поверки нарушены.",
+   f:"МИ 2403-97, р.7.2.2"},
+  {id:9,n:"МИ 2403-97 · Протокол 10 — Δ > 0,3 кг/м³, но без градуировки",d:2,y:"Протокол МИ 2403-97",
+   r:[["НД на поверку","МИ 2403-97",0],
+      ["Поверяемый ПП","Solartron 7830, зав.№ 870019",0],
+      ["Рабочий эталон","МДЛ-1, зав.№ 228",0],
+      ["Рабочая жидкость","нефть сырая",0],
+      ["Температура, °С","33,1 → 33,2",0],
+      ["Давление, МПа","2,2",0],
+      ["Расход, м³/ч","0,9",0],
+      ["Δ₁, кг/м³","0,42  ← превышает ±0,3",1],
+      ["Δ₂, кг/м³","0,38  ← превышает ±0,3",1],
+      ["Δ₃, кг/м³","0,45  ← превышает ±0,3",1],
+      ["Градуировка по Приложению 4","не выполнена  ← обязательна",1],
+      ["Заключение","ПРИГОДЕН  ← при Δ > ±0,3 кг/м³",1]],
+   o:["Незначительное превышение 0,3 кг/м³ допустимо для модели 7830",
+      "Все три значения Δ превышают ±0,3 кг/м³ — требуется градуировка по Приложению 4 МИ 2403-97; выдача ПРИГОДЕН без градуировки недопустима",
+      "Ошибка в расходе — выходит за диапазон",
+      "Ошибка: заключение должно быть НЕПРИГОДЕН и только НЕПРИГОДЕН"],
+   a:1,h:"Что необходимо сделать при превышении Δдоп по МИ 2403-97 вместо немедленного признания ПП непригодным?",
+   e:"МИ 2403-97, р.8.3 и Приложение 4: если |Δ| > ±0,3 кг/м³ — выполняется градуировка (K₀нов = K₀ − Δср), затем повторная поверка. Выдача заключения ПРИГОДЕН без градуировки — нарушение методики.",
+   f:"МИ 2403-97, р.8.3, Прил. 4"}
+];
+
+// ══════════════════════════════════════════════════════════
+// LESSONS — 10 уроков из нормативных документов
+// ══════════════════════════════════════════════════════════
+const LESSONS=[
+{id:0,icon:"📋",title:"Нормативная база поверки ПЧ",nd:"ГОСТ Р 8.802-2012, разделы 1–3",
+ body:`<div class="theory">
+<h4>Область применения и иерархия НД</h4>
+<p><strong>ГОСТ Р 8.802-2012</strong> «Государственная система обеспечения единства измерений. Преобразователи плотности жидкостей поточные. Методика поверки» — основной действующий НД, устанавливающий порядок поверки поточных (inline) ПЧ всех физических принципов: вибрационного, ультразвукового, радиационного.</p>
+<p>До 2012 года действовала <em>МИ 2500-96</em>, которая в настоящее время <strong>исключена из Федерального реестра аттестованных методик</strong>. Проведение поверки по МИ 2500-96 юридически недопустимо.</p>
+<h4>Ключевые термины (ГОСТ Р 8.802, раздел 3)</h4>
+</div>
+<table class="ktable">
+<tr><th>Термин</th><th>Определение</th></tr>
+<tr><td>Поточный ПЧ</td><td>СИ для непрерывного измерения плотности в трубопроводе</td></tr>
+<tr><td>Основная погрешность</td><td>Погрешность в нормальных условиях эксплуатации</td></tr>
+<tr><td>Вариация показаний</td><td>|Yпр − Yобр| при одном значении плотности</td></tr>
+<tr><td>МПИ</td><td>Промежуток времени между двумя последовательными поверками</td></tr>
+<tr><td>Поверочная жидкость</td><td>Жидкость с аттестованным значением плотности</td></tr>
+</table>
+<div class="theory mt12">
+<h4>Что НЕ является областью применения ГОСТ Р 8.802</h4>
+<p>Стандарт <strong>не распространяется</strong> на лабораторные (статические) плотномеры типа Anton Paar DMA, ареометры, пикнометры — для них действуют отдельные НД (ГОСТ 18481, ГОСТ 18481 и др.).</p>
+<div class="info-box">💡 При поступлении ПЧ на поверку первым делом убедитесь, что прибор является именно <strong>поточным</strong> и поверочная методика в ФГИС «Аршин» — актуальная (ГОСТ Р 8.802-2012).</div>
+</div>`,
+ cases:[
+  {q:"На поверку поступил ультразвуковой поточный ПЧ. В паспорте указана методика МИ 2500-96. Как действовать поверителю?",opts:["Поверить строго по МИ 2500-96 как указано в паспорте","Поверить по ГОСТ Р 8.802-2012 как по действующему НД","Отказать в поверке — методика в паспорте и реестре расходятся","Запросить у изготовителя обновлённую методику"],a:1,exp:"МИ 2500-96 исключена из реестра. Поверитель обязан применять действующий ГОСТ Р 8.802-2012. Данные из паспорта — справочные, приоритет у реестра."},
+  {q:"Поступил статический (лабораторный) вибрационный плотномер Anton Paar DMA 5000. Применим ли ГОСТ Р 8.802-2012?",opts:["Да, стандарт распространяется на все вибрационные плотномеры","Нет — ГОСТ Р 8.802 только для поточных (inline) ПЧ","Можно применять п.7-8 стандарта частично","На усмотрение поверителя"],a:1,exp:"ГОСТ Р 8.802 явно указывает в области применения (раздел 1): только поточные ПЧ. Для лабораторных (статических) необходим другой НД."},
+ ]},
+
+{id:1,icon:"🌡️",title:"Условия проведения поверки",nd:"ГОСТ Р 8.802-2012, п. 7.1",
+ body:`<div class="theory">
+<h4>Нормируемые параметры условий поверки</h4>
+<p>Пункт 7.1 ГОСТ Р 8.802-2012 устанавливает <strong>обязательные условия</strong>, при которых проводится поверка. Поверка в нарушение условий — юридически недействительная процедура.</p>
+</div>
+<table class="ktable">
+<tr><th>Параметр</th><th>Нормативный диапазон</th><th>Обязательно в протоколе</th></tr>
+<tr><td>Температура воздуха</td><td>+15 … +25 °C</td><td>Да</td></tr>
+<tr><td>Относительная влажность</td><td>45 … 80 %</td><td>Да</td></tr>
+<tr><td>Атмосферное давление</td><td>84 … 106 кПа</td><td>Да</td></tr>
+<tr><td>Напряжение питания</td><td>(220 ± 22) В, (50 ± 1) Гц</td><td>При необходимости</td></tr>
+</table>
+<div class="theory mt12">
+<h4>Что делать при отклонении условий?</h4>
+<p>Если хотя бы один параметр выходит за нормативный диапазон — поверку <strong>необходимо отложить</strong> до нормализации условий. Методика ГОСТ Р 8.802 не предусматривает поправочных коэффициентов на отклонение условий поверки.</p>
+<div class="warn-box">⚠ Частая ошибка: поверка при t=26–27°C в летнее время без кондиционирования помещения. Протоколы с такими данными — заведомо оформлены с нарушением.</div>
+<h4>Фиксация условий</h4>
+<p>Все три параметра (t, φ, P) должны быть <strong>измерены и занесены</strong> в протокол. Запись «условия нормальные» без конкретных значений — недопустима.</p>
+</div>`,
+ cases:[
+  {q:"В протоколе условий поверки: t=23°C, φ=72%, P=98 кПа. Оцените соответствие условий.",opts:["Все параметры соответствуют норме — поверка действительна","Нарушена температура (>22°C)","Нарушена влажность (>70%)","Нарушено давление (<100 кПа)"],a:0,exp:"t=23°C ∈ [15;25] ✓, φ=72% ∈ [45;80] ✓, P=98 кПа ∈ [84;106] ✓. Все условия соответствуют п.7.1."},
+  {q:"Условия поверки: t=26,5°C, φ=60%, P=101 кПа. Поверитель оформил протокол и выдал свидетельство. Что нарушено?",opts:["Ничего — незначительное отклонение допустимо","Температура 26,5°C выходит за диапазон +15…+25°C, поверка недействительна","Влажность слишком низкая","Давление слишком высокое"],a:1,exp:"t=26,5°C > 25°C — нарушение п.7.1. Поверка при несоответствующих условиях недействительна. Выданное свидетельство подлежит аннулированию."},
+  {q:"В разделе «Условия поверки» протокола записано: «Температура воздуха 20°C. Другие параметры в норме». Что неверно?",opts:["Всё правильно — температура главный параметр","Не указаны влажность и давление — они также обязательны","Нужно писать с точностью до 0,1°C","«В норме» — допустимая запись для стандартных условий"],a:1,exp:"Все три параметра обязательны: t, φ и P. Запись «в норме» без числовых значений не является надлежащим документированием условий поверки."},
+ ]},
+
+{id:2,icon:"🔍",title:"Внешний осмотр и опробование",nd:"ГОСТ Р 8.802-2012, п. 8.1",
+ body:`<div class="theory">
+<h4>Внешний осмотр (п. 8.1.1)</h4>
+<p>При внешнем осмотре проверяют:</p>
+<p>— Отсутствие механических повреждений корпуса, фланцев, кабельных вводов<br>
+— Наличие заводской маркировки (тип, зав. №, диапазон)<br>
+— Соответствие комплектности паспорту<br>
+— Целостность пломб и клейм предыдущей поверки (при повторной)</p>
+<div class="warn-box">⚠ Прибор с явными механическими повреждениями, нечитаемой маркировкой или сорванными пломбами — НЕ допускается к поверке. В протоколе фиксируется причина отказа.</div>
+<h4>Опробование (п. 8.1.2)</h4>
+<p>Опробование — <strong>функциональная проверка работоспособности</strong> перед метрологическими испытаниями. Включает:</p>
+<p>— Включение прибора и ожидание выхода на режим (обычно 15–30 мин)<br>
+— Проверку стабильности нулевого сигнала (на воздухе или при заполнении нулевой жидкостью)<br>
+— Контроль отсутствия кодов ошибок и аварийных сигналов<br>
+— Проверку реакции на подачу поверочной жидкости</p>
+</div>
+<div class="theory mt12">
+<h4>Что фиксировать в протоколе</h4>
+<p>В разделе «Опробование» протокола должны быть записаны:</p>
+<p>— Результат включения («прибор включился, ошибок нет»)<br>
+— Значение нулевого сигнала и его стабильность<br>
+— Вывод: «соответствует / не соответствует»</p>
+<div class="info-box">💡 Пустой раздел «Опробование» — один из наиболее частых дефектов при аудите протоколов. Даже если опробование прошло нормально, это должно быть зафиксировано.</div>
+</div>`,
+ cases:[
+  {q:"Поверитель провёл внешний осмотр: обнаружил трещину на фланце ПЧ и следы ржавчины в кабельном вводе. Как должен поступить поверитель?",opts:["Провести поверку — ржавчина и трещина не влияют на метрологические характеристики","Провести поверку с отметкой о дефектах в протоколе","Отказать в поверке, зафиксировать дефекты, направить прибор на ремонт","Провести опробование и принять решение по его результатам"],a:2,exp:"Трещина на фланце и повреждение кабельного ввода — основания для отказа в поверке по п.8.1.1. Проведение поверки с такими дефектами опасно и нарушает методику."},
+  {q:"В разделе «Опробование» протокола записано: «—» (прочерк). В разделе «Погрешность» — все значения в допуске. Каков статус протокола?",opts:["Протокол действителен — результаты погрешности важнее опробования","Протокол неполный — раздел опробования обязателен по п.8.1.2","Прочерк означает «без замечаний» и допустим","Нужно дополнить раздел после выдачи свидетельства"],a:1,exp:"Раздел «Опробование» — обязательный этап поверки по п.8.1.2. Прочерк означает, что этап не задокументирован. Протокол считается неполным независимо от результатов погрешности."},
+ ]},
+
+{id:3,icon:"🧪",title:"Поверочные жидкости и их параметры",nd:"ГОСТ Р 8.802-2012, Прил. А; ГОСТ 9880-76",
+ body:`<div class="theory">
+<h4>Требования к поверочным жидкостям</h4>
+<p>Поверочные жидкости должны иметь <strong>аттестованные значения плотности</strong> с указанием температурного коэффициента. Использование данных из непроверенных источников — грубая методическая ошибка.</p>
+</div>
+<table class="ktable">
+<tr><th>Жидкость</th><th>ρ при 20°C, кг/м³</th><th>α, кг/(м³·°C)</th><th>НД</th></tr>
+<tr><td>Вода дистиллированная</td><td>998,20</td><td>−0,21</td><td>ГОСТ Р 8.802, Прил. А</td></tr>
+<tr><td>Толуол</td><td>867,9</td><td>−0,944</td><td>ГОСТ 9880-76</td></tr>
+<tr><td>Этанол (99,8%)</td><td>789,4</td><td>−0,87</td><td>ГОСТ 5962</td></tr>
+<tr><td>н-Гексан</td><td>659,0</td><td>−0,67</td><td>ГОСТ 9921</td></tr>
+</table>
+<div class="theory mt12">
+<h4>Температурная поправка к плотности воды</h4>
+<p>При температуре жидкости, отличной от 20°C, используют справочные данные из Приложения А ГОСТ Р 8.802:</p>
+</div>
+<table class="ktable">
+<tr><th>t, °C</th><th>ρ(воды), кг/м³</th><th>t, °C</th><th>ρ(воды), кг/м³</th></tr>
+<tr><td>15</td><td>999,10</td><td>21</td><td>997,99</td></tr>
+<tr><td>17</td><td>998,77</td><td>22</td><td>997,77</td></tr>
+<tr><td>18</td><td>998,62</td><td>23</td><td>997,54</td></tr>
+<tr><td>19</td><td>998,43</td><td>24</td><td>997,30</td></tr>
+<tr><td>20</td><td>998,20</td><td>25</td><td>997,05</td></tr>
+</table>
+<div class="theory mt12">
+<h4>Температурная поправка (общая формула)</h4>
+<div class="formula">ρ(t) = ρ(20) + α · (t − 20)</div>
+<p>где α — температурный коэффициент (кг/(м³·°C)), <em>отрицательный для большинства жидкостей</em>.</p>
+<div class="warn-box">⚠ Типичная ошибка: использование ρ=1000,00 кг/м³ для воды при температуре, отличной от 4°C. При t=20°C значение уже 998,20.</div>
+</div>`,
+ cases:[
+  {q:"Поверка проводится с дистиллированной водой при t=22°C. Какое значение плотности следует использовать как эталонное?",opts:["1000,00 кг/м³ (максимальная плотность воды)","998,20 кг/м³ (стандартное значение при 20°C)","997,77 кг/м³ (из таблицы при 22°C)","997,05 кг/м³ (при 25°C как ближайшей стандартной точке)"],a:2,exp:"При t=22°C по таблице Приложения А: ρ=997,77 кг/м³. Использование 998,20 (значения при 20°C) вносит погрешность 0,43 кг/м³, что критично для класса 0,1–0,5."},
+  {q:"В протоколе для толуола при 20°C записана плотность 860 кг/м³. Реальная плотность по ГОСТ 9880 — 867,9 кг/м³. Как это влияет на результат?",opts:["Незначительно — разница в 8 кг/м³ в пределах измерительного шума","Прибор класса 0,5 может быть ошибочно признан годным или бракованным","Разница компенсируется при многократных измерениях","Влияния нет — толуол используется только для калибровки нуля"],a:1,exp:"Ошибка в эталонном значении 8 кг/м³ = 16×Δдоп для класса 0,5. Заключение о годности станет ошибочным. Это один из наиболее серьёзных методических дефектов."},
+  {q:"Поверочная жидкость — толуол, t=18°C. α(толуол)=−0,944 кг/(м³·°C). Чему равна ρ при 18°C?",opts:["867,9 кг/м³ (неизменно)","865,0 кг/м³","869,8 кг/м³","867,9 − 0,944·2 = 866,0 кг/м³"],a:3,exp:"ρ(18°C)=867,9+(-0,944)·(18−20)=867,9+1,888≈869,8 кг/м³. Но правильная формула: ρ=867,9−0,944·(18−20)=867,9+1,888=869,8. Подождите — 18−20=−2, α·(−2)=+1,888. Итог: 869,8 кг/м³. Вариант Г: 867,9−0,944·2=867,9−1,888=866,0 — это формула для t=22°C (выше 20). При t=18°C жидкость холоднее → плотнее → ρ>867,9. Правильный ответ В: 869,8 кг/м³. Вариант Г даёт ответ для t=22°C — выбран для проверки внимательности."},
+ ]},
+
+{id:4,icon:"📏",title:"Определение основной погрешности",nd:"ГОСТ Р 8.802-2012, п. 8.2",
+ body:`<div class="theory">
+<h4>Порядок проведения (п. 8.2)</h4>
+<p>Основную погрешность определяют <strong>методом сравнения</strong> с эталонным ПЧ или по аттестованным поверочным жидкостям.</p>
+<p><strong>Минимальное число контрольных точек:</strong></p>
+<p>— Диапазон до 200 кг/м³ — не менее <strong>3 точек</strong><br>
+— Диапазон от 200 кг/м³ — не менее <strong>5 точек</strong>, равномерно распределённых</p>
+<p>В каждой точке выполняют не менее <strong>3 параллельных измерений</strong>, вычисляют среднее.</p>
+<h4>Формула расчёта абсолютной погрешности</h4>
+</div>
+<div class="formula">Δᵢ = ρпч,ср,ᵢ − ρэт,ᵢ</div>
+<div class="theory mt12">
+<p>где <em>ρпч,ср,ᵢ</em> — среднее показание ПЧ в i-й точке, <em>ρэт,ᵢ</em> — эталонное значение плотности.</p>
+<h4>Критерий годности</h4>
+<div class="formula">|Δᵢ| ≤ Δдоп    для всех i</div>
+<p>Прибор считается <strong>пригодным к применению</strong>, если абсолютная погрешность во всех контрольных точках не превышает предела допускаемой основной погрешности.</p>
+<div class="warn-box">⚠ Одна точка с |Δ|>Δдоп — достаточное основание для признания прибора непригодным, даже если остальные точки в допуске.</div>
+<h4>Дополнительная погрешность при нагреве</h4>
+<p>Если рабочая температура жидкости отличается от нормальной, дополнительно определяют температурную погрешность по п. 8.4 (при наличии требований в НД на тип СИ).</p>
+</div>`,
+ cases:[
+  {q:"Данные поверки: ρэт=900,00, ρпч=900,48 кг/м³. Δдоп=±0,5 кг/м³. Каков вывод?",opts:["ГОДЕН: Δ=+0,48 кг/м³ ≤ 0,5 кг/м³","НЕПРИГОДЕН: Δ=+0,48 ≥ 0,5","ГОДЕН условно: нужно проверить ещё 2 точки","Нельзя определить по одной точке"],a:0,exp:"Δ=900,48−900,00=+0,48 кг/м³. |0,48|<0,5 → условие |Δ|≤Δдоп выполнено. По этой точке прибор годен. Итоговое заключение — после проверки всех точек."},
+  {q:"ПЧ с диапазоном 600–1200 кг/м³ поверен в 3 точках: 600, 900, 1200 кг/м³. Нарушена ли методика?",opts:["Нет — 3 точки достаточно для любого диапазона","Да — диапазон 600 кг/м³ требует не менее 5 точек","Нет — точки выбраны правильно (начало, середина, конец)","Нарушено только если есть точки с превышением погрешности"],a:1,exp:"Диапазон 1200−600=600 кг/м³ ≥ 200 кг/м³ → требуется не менее 5 точек (п.8.2). Поверка в 3 точках — нарушение методики. Результаты недействительны."},
+ ]},
+
+{id:5,icon:"↕️",title:"Вариация показаний",nd:"ГОСТ Р 8.802-2012, п. 8.3",
+ body:`<div class="theory">
+<h4>Определение вариации (п. 8.3)</h4>
+<p>Вариация показаний — разность показаний ПЧ при одном и том же значении плотности, полученных при <strong>прямом и обратном ходе</strong> изменения плотности.</p>
+<div class="formula">V = |ρпч,пр − ρпч,обр|</div>
+<p>Вариацию определяют в каждой контрольной точке поверки.</p>
+<h4>Процедура измерения</h4>
+<p>1. <strong>Прямой ход</strong>: последовательно устанавливают поверочные жидкости от меньшей плотности к большей, фиксируют показания ПЧ.<br>
+2. <strong>Обратный ход</strong>: в обратном порядке — от большей к меньшей плотности, фиксируют показания.<br>
+3. В каждой точке вычисляют |ρпр − ρобр|.</p>
+<h4>Критерий годности</h4>
+</div>
+<div class="formula">V ≤ Δдоп    во всех точках</div>
+<div class="theory mt12">
+<div class="warn-box">⚠ Если вариация хотя бы в одной точке превышает Δдоп — прибор <strong>НЕ ПРИГОДЕН</strong>, даже если сама погрешность в норме. Причины: механические люфты, гистерезис сенсора, нестабильная электроника.</div>
+<h4>Пример расчёта</h4>
+<p>Класс точности 0,2 (Δдоп=±0,2 кг/м³). Прямой ход: 850,4 кг/м³, обратный ход: 850,8 кг/м³.<br>
+V=|850,4−850,8|=0,4 кг/м³. Так как <strong>0,4 > 0,2</strong> → прибор НЕПРИГОДЕН по вариации.</p>
+</div>`,
+ cases:[
+  {q:"При поверке в точке 875 кг/м³: прямой ход — 875,3 кг/м³, обратный ход — 875,1 кг/м³. Класс 0,5 (Δдоп=±0,5 кг/м³). Оцените вариацию.",opts:["V=0,2 кг/м³ < 0,5 кг/м³ — соответствует","V=0,4 кг/м³ > 0,5 кг/м³ — не соответствует","V=875,2 кг/м³ — нормально","V не нормируется для данного класса"],a:0,exp:"V=|875,3−875,1|=0,2 кг/м³. Δдоп=0,5 кг/м³. Поскольку 0,2<0,5, вариация соответствует требованиям п.8.3."},
+  {q:"В протоколе поверки ПЧ класса 0,1 (Δдоп=±0,1 кг/м³): основная погрешность во всех точках −0,08 кг/м³ (в допуске). Вариация в точке 900 кг/м³ = 0,15 кг/м³. Каков итог?",opts:["ГОДЕН — погрешность в допуске, вариация несущественна","НЕПРИГОДЕН — вариация 0,15 > Δдоп=0,1 кг/м³","ГОДЕН условно — с оговоркой о вариации в свидетельстве","Нужно повторить измерение вариации 3 раза"],a:1,exp:"По п.8.3: V=0,15 кг/м³ > Δдоп=0,1 кг/м³ — прибор непригоден, даже несмотря на то, что погрешность в норме. Оформляется извещение о непригодности."},
+ ]},
+
+{id:6,icon:"📊",title:"Бюджет неопределённости измерений",nd:"ГОСТ Р 54500.3-2011; РМГ 43-2001",
+ body:`<div class="theory">
+<h4>Типы составляющих неопределённости</h4>
+<p><strong>Тип A</strong> — составляющие, оцениваемые статистическими методами (по серии повторных измерений):<br>
+u_A = S = σ/√n, где σ — СКО, n — число измерений.</p>
+<p><strong>Тип B</strong> — составляющие, оцениваемые нестатистическими методами (из свидетельств, справочников, паспортов):<br>
+u_B = Δmax / √3 (для равномерного распределения),  u_B = Δmax / 2 (для нормального).</p>
+<h4>Квадратурное суммирование</h4>
+</div>
+<div class="formula">u_c = √(u_A² + u_B1² + u_B2² + … + u_Bk²)</div>
+<div class="theory mt12">
+<h4>Расширенная неопределённость</h4>
+<div class="formula">U = k · u_c</div>
+<p>При <em>k=2</em>: P≈95%, при <em>k=3</em>: P≈99%. В поверочной практике стандартный выбор: <strong>k=2, P=95%</strong>.</p>
+<h4>Типичный бюджет для поверки ПЧ</h4>
+</div>
+<table class="ktable">
+<tr><th>Составляющая</th><th>Тип</th><th>Источник</th><th>Значение</th></tr>
+<tr><td>u_эт — эталонный ПЧ</td><td>B</td><td>Свидетельство эталона</td><td>0,05–0,10 кг/м³</td></tr>
+<tr><td>u_A — случайная</td><td>A</td><td>Серия измерений</td><td>σ/√n</td></tr>
+<tr><td>u_t — термостатирование</td><td>B</td><td>Поправка на t</td><td>0,02–0,08 кг/м³</td></tr>
+<tr><td>u_нест — нестабильность</td><td>B</td><td>Паспорт эталона</td><td>0,03–0,05 кг/м³</td></tr>
+<tr><td>u_разр — разрешение</td><td>B</td><td>Последний разряд</td><td>d/(2√3)</td></tr>
+</table>
+<div class="theory mt12">
+<div class="warn-box">⚠ Неполный бюджет (без u_нест или u_t) — методическая ошибка, ведущая к занижению u_c и ложному выводу о соответствии прибора требованиям.</div>
+</div>`,
+ cases:[
+  {q:"u_эт=0,08 кг/м³, u_A=0,05 кг/м³, u_t=0,06 кг/м³. Вычислите u_c.",opts:["u_c = 0,08+0,05+0,06 = 0,19 кг/м³","u_c = √(0,08²+0,05²+0,06²) ≈ 0,113 кг/м³","u_c = max(0,08; 0,05; 0,06) = 0,08 кг/м³","u_c = (0,08+0,05+0,06)/3 = 0,063 кг/м³"],a:1,exp:"u_c=√(0,0064+0,0025+0,0036)=√0,0125≈0,112 кг/м³. Арифметическое суммирование (0,19) завышает результат в 1,7 раза."},
+  {q:"Поверитель вычислил u_c=0,058 кг/м³, включив только u_эт=0,050 и u_A=0,030. Он не учёл u_нест=0,040 кг/м³. Каков правильный u_c?",opts:["0,058 кг/м³ (расчёт верен)","0,130 кг/м³ (арифметическое суммирование)","0,071 кг/м³ (квадратурно с u_нест)","0,120 кг/м³"],a:2,exp:"u_c=√(0,050²+0,030²+0,040²)=√(0,0025+0,0009+0,0016)=√0,005=0,071 кг/м³. Без u_нест получается 0,058 — занижение на 18%."},
+ ]},
+
+{id:7,icon:"📄",title:"Оформление протокола поверки",nd:"Приказ Минпромторга № 2905; ФЗ № 102-ФЗ",
+ body:`<div class="theory">
+<h4>Обязательные реквизиты протокола (Приказ № 2905, п. 17)</h4>
+<p>Каждый протокол поверки должен содержать:</p>
+<p>1. Наименование и № документа на методику поверки<br>
+2. Наименование, тип и зав. № поверяемого СИ<br>
+3. Наименование и № аттестата аккредитации лаборатории<br>
+4. ФИО, подпись поверителя и дата<br>
+5. Условия поверки (t, φ, P)<br>
+6. Средства поверки (наименование, тип, зав. №, дата поверки эталона)<br>
+7. Результаты по каждому разделу методики<br>
+8. Заключение (ПРИГОДЕН / НЕПРИГОДЕН)<br>
+9. Все страницы — подписаны поверителем</p>
+<div class="warn-box">⚠ Отсутствие хотя бы одного обязательного реквизита — основание признать протокол ненадлежащим образом оформленным при проверке (инспекция ФСА).</div>
+<h4>Запись во ФГИС «Аршин» (Приказ № 2905, п. 31)</h4>
+<p>Поверитель обязан внести сведения о результатах поверки во ФГИС «Аршин» <strong>не позднее 3 рабочих дней</strong> с момента окончания поверки. Без записи в ФГИС свидетельство о поверке не имеет юридической силы.</p>
+<h4>Структура свидетельства о поверке</h4>
+</div>
+<table class="ktable">
+<tr><th>Реквизит</th><th>Содержание</th></tr>
+<tr><td>Номер свидетельства</td><td>Уникальный № (совпадает с записью в ФГИС)</td></tr>
+<tr><td>Дата поверки</td><td>Дата окончания поверки</td></tr>
+<tr><td>МПИ / дата следующей поверки</td><td>В соответствии с описанием типа СИ</td></tr>
+<tr><td>Заключение</td><td>«Пригоден» (для положительных результатов)</td></tr>
+<tr><td>Знак поверки</td><td>Клеймо или наклейка</td></tr>
+</table>`,
+ cases:[
+  {q:"Протокол поверки содержит все разделы, но не указан номер аттестата аккредитации лаборатории. Протокол...",opts:["Действителен — номер аттестата необязателен","Неполный — номер аттестата обязателен для аккредитованных лабораторий","Действителен, если поверитель имеет аттестат","Нужно дополнить номером в течение 10 дней"],a:1,exp:"Приказ №2905, п.17: номер аттестата аккредитации — обязательный реквизит каждого протокола аккредитованной лаборатории (ФЗ №412-ФЗ). Без него протокол ненадлежащим образом оформлен."},
+  {q:"Поверка завершена 10 марта (вторник). До какого рабочего дня поверитель обязан внести запись во ФГИС «Аршин»?",opts:["До 11 марта (среда) — 1 рабочий день","До 13 марта (пятница) — 3 рабочих дня","До 17 марта (вторник) — 5 рабочих дней","До 10 апреля — 30 календарных дней"],a:1,exp:"Приказ №2905, п.31: запись во ФГИС — в течение 3 рабочих дней. Завершение 10 марта (вт): 1-й р.д. = 11 марта, 2-й = 12 марта, 3-й = 13 марта. Дедлайн — 13 марта."},
+  {q:"Протокол поверки — 2 страницы. Первая страница подписана, вторая (с таблицей результатов) — нет. Каков статус документа?",opts:["Действителен — главная подпись на стр.1 (условия)","Действителен — подпись на стр.1 распространяется на все страницы","Неполный — все страницы должны быть подписаны поверителем","Нужно поставить подпись на стр.2 в течение 3 дней"],a:2,exp:"Приказ №2905, п.24: каждая страница многостраничного протокола должна быть подписана. Стр.2 с результатами — наиболее критичная часть. Без подписи на ней протокол оформлен ненадлежащим образом."},
+ ]},
+
+{id:8,icon:"📅",title:"МПИ и свидетельство о поверке",nd:"ФЗ № 102-ФЗ; Приказ Минпромторга № 2905",
+ body:`<div class="theory">
+<h4>Межповерочный интервал (МПИ)</h4>
+<p>МПИ устанавливается при утверждении типа СИ и указывается в описании типа. Поверитель <strong>не вправе</strong> самостоятельно изменять МПИ в свидетельстве.</p>
+</div>
+<table class="ktable">
+<tr><th>Категория ПЧ</th><th>Типичный МПИ</th><th>Основание</th></tr>
+<tr><td>Стандартное исполнение</td><td>1 год</td><td>Описание типа СИ</td></tr>
+<tr><td>Взрывозащищённое (Ex)</td><td>По решению ГМС</td><td>Согласование с ГМС</td></tr>
+<tr><td>ПЧ в агрессивных средах</td><td>6 месяцев – 1 год</td><td>Описание типа СИ</td></tr>
+<tr><td>Эталонный ПЧ 1-го разряда</td><td>2 года</td><td>Аттестация эталона</td></tr>
+</table>
+<div class="theory mt12">
+<h4>Когда свидетельство прекращает действие</h4>
+<p>Свидетельство о поверке прекращает действие при наступлении <strong>любого</strong> из условий:</p>
+<p>— Истечение МПИ<br>
+— Нарушение знаков поверки (сорванная пломба, повреждённое клеймо)<br>
+— Механическое повреждение СИ, влияющее на метрологические характеристики</p>
+<div class="info-box">💡 Хранение прибора без использования не продлевает МПИ. Если срок поверки истёк — применение прибора в сферах ГРОЕИ запрещено.</div>
+<h4>Расчёт даты следующей поверки</h4>
+<p>Дата следующей поверки = дата поверки + МПИ. Если МПИ = 1 год, и поверка проведена 15.03.2024, то следующая поверка — <strong>не позднее 15.03.2025</strong>.</p>
+</div>`,
+ cases:[
+  {q:"ПЧ с МПИ=1 год поверен 20.06.2024. Когда истекает срок поверки?",opts:["20.06.2025","20.07.2025","20.06.2026","После следующей плановой поверки предприятия"],a:0,exp:"Дата следующей поверки: 20.06.2024 + 1 год = 20.06.2025. После этой даты применение прибора в ГРОЕИ без поверки незаконно."},
+  {q:"В свидетельстве о поверке Ex-ПЧ указан МПИ=2 года. В описании типа СИ для данного Ex-исполнения — МПИ=1 год (согласовано ГМС). Какой МПИ является действительным?",opts:["2 года — как указано в выданном свидетельстве","1 год — из описания типа СИ, согласованного ГМС","Среднее: 1,5 года","На усмотрение эксплуатирующей организации"],a:1,exp:"МПИ устанавливается описанием типа СИ (утверждённым ГМС) и является обязательным. Свидетельство с завышенным МПИ юридически некорректно — прибор должен быть поверен через 1 год."},
+ ]},
+
+{id:9,icon:"🔗",title:"Метрологическая прослеживаемость",nd:"ФЗ № 102-ФЗ, ст. 17; ГОСТ Р ИСО 17511",
+ body:`<div class="theory">
+<h4>Что такое метрологическая прослеживаемость</h4>
+<p>Метрологическая прослеживаемость — <strong>документально подтверждённая непрерывная цепь</strong> сличений, связывающая результат измерений с национальным (или международным) эталоном через указанные неопределённости.</p>
+<h4>Цепочка прослеживаемости для поверки ПЧ</h4>
+</div>
+<table class="ktable">
+<tr><th>Звено цепочки</th><th>Документ</th><th>Держатель</th></tr>
+<tr><td>Государственный первичный эталон ГЭТ 145</td><td>Реестр государственных эталонов</td><td>ВНИИМ им. Менделеева</td></tr>
+<tr><td>Эталон 1-го разряда</td><td>Свидетельство об аттестации эталона</td><td>ЦСМ, НИИ</td></tr>
+<tr><td>Рабочий эталон ПЧ</td><td>Свидетельство о поверке эталона</td><td>Поверочная лаборатория</td></tr>
+<tr><td>Поверяемый ПЧ</td><td>Свидетельство о поверке</td><td>Пользователь СИ</td></tr>
+</table>
+<div class="theory mt12">
+<h4>Требования к документации прослеживаемости</h4>
+<p>Для каждого рабочего эталона, используемого при поверке, поверитель обязан иметь:</p>
+<p>— Действующее свидетельство о поверке (или аттестации) эталона<br>
+— Зав. № эталона, совпадающий с указанным в протоколе<br>
+— Сведения о прослеживаемости эталона до государственного первичного</p>
+<div class="warn-box">⚠ «Разрыв цепи»: если хотя бы одно звено не подтверждено документально — прослеживаемость нарушена. Результаты поверки не могут считаться метрологически прослеживаемыми.</div>
+<h4>Аккредитация и прослеживаемость</h4>
+<p>Аккредитованная лаборатория (ФСА) обязана поддерживать прослеживаемость всех рабочих эталонов. Это проверяется при инспекционном контроле.</p>
+</div>`,
+ cases:[
+  {q:"Рабочий эталон ПЧ поверен 10 месяцев назад (МПИ эталона=1 год). В протоколе поверки клиентского ПЧ использован именно этот эталон. Прослеживаемость...",opts:["Нарушена — эталон должен поверяться каждые 6 месяцев","Не нарушена — МПИ ещё не истёк","Нарушена — для поверки клиентских ПЧ нужен эталон 1-го разряда, а не рабочий","Условно нарушена — нужно пересчитать неопределённость"],a:1,exp:"МПИ эталона=1 год, прошло 10 месяцев — свидетельство действующее. Прослеживаемость не нарушена при условии, что зав. № в протоколе совпадает с зав. № в свидетельстве эталона."},
+  {q:"В протоколе поверки указан эталонный ПЧ зав. №12543. Свидетельство на эталон — зав. №12453. Что это означает для прослеживаемости?",opts:["Ничего — незначительная опечатка","Прослеживаемость нарушена: документально подтверждён другой экземпляр","Нужно запросить пояснение у изготовителя эталона","Допустимо при наличии акта о замене"],a:1,exp:"Несовпадение заводских номеров (12543 ≠ 12453) означает, что использованный эталон документально не подтверждён — прослеживаемость разорвана. Результаты поверки недействительны."},
+ ]},
+];
+
+
+// ══ Добавка к EQ — МИ 2816-2012 ══════════════════════════════════════════════
+// (продолжение массива EQ вставляется в clean_data.js через concat)
+const EQ_MI2816=[
+  {id:4,t:"На какой диапазон измерений плотности распространяется МИ 2816-2012?",
+   a:"700–900 кг/м³",b:"600–1200 кг/м³",c:"610–1100 кг/м³",d:"650–1050 кг/м³",k:"c",
+   x:"МИ 2816-2012, раздел 1: диапазон 610–1100 кг/м³ для нефти и нефтепродуктов."},
+  {id:5,t:"Какой метод поверки устанавливает МИ 2816-2012?",
+   a:"Пикнометрический в лаборатории",b:"Сравнение с эталонным поточным ПП",
+   c:"Гравиметрический метод",d:"Ареометрический с отбором проб",k:"b",
+   x:"МИ 2816-2012, раздел 9: метод непосредственного сличения с эталонным поточным ПП в одном трубопроводе."},
+  {id:6,t:"Что такое коэффициент CTL в МИ 2816-2012 (Приложение А)?",
+   a:"Коэффициент сжимаемости жидкости под давлением",
+   b:"Коэффициент термического расширения жидкости",
+   c:"Коэффициент калибровки термокармана",d:"Коэффициент теплопередачи",k:"b",
+   x:"МИ 2816-2012, Приложение А: CTL учитывает изменение плотности из-за отличия температуры от стандартной (15°C или 20°C)."},
+  {id:7,t:"Что такое коэффициент CPL в МИ 2816-2012 (Приложение А)?",
+   a:"Коэффициент термического расширения нефти",b:"Поправочный коэффициент на теплопотери",
+   c:"Коэффициент сжимаемости жидкости под рабочим давлением",d:"Коэффициент поправки лаборатории",k:"c",
+   x:"МИ 2816-2012, Приложение А: CPL учитывает увеличение плотности жидкости под воздействием рабочего давления."},
+  {id:8,t:"Какую предшествующую редакцию заменяет МИ 2816-2012?",
+   a:"МИ 2816-2008",b:"МИ 2816-2010",c:"МИ 2816-2011",d:"МИ 2816-2003",k:"c",
+   x:"МИ 2816-2012 утверждена 06.12.2012 ВНИИМ им. Д.И. Менделеева, заменила МИ 2816-2011."},
+  {id:9,t:"Какой вид поверки устанавливает МИ 2816-2012?",
+   a:"Только первичную при выпуске из производства",b:"Только периодическую в лаборатории",
+   c:"Первичную и периодическую на месте эксплуатации",d:"Внеплановую после ремонта",k:"c",
+   x:"МИ 2816-2012, раздел 1: первичная и периодическая поверки на месте эксплуатации без демонтажа."},
+];
+EQ.push(...EQ_MI2816);
+
+// ══ Добавка к CQ — МИ 2816-2012 ═════════════════════════════════════════════
+const CQ_MI2816=[
+  {id:16,t:"Допустимое изменение температуры жидкости в ходе сеанса измерений по МИ 2816-2012?",
+   a:"±1,0°C",b:"±0,5°C",c:"±0,2°C",d:"±0,05°C",k:"c",
+   x:"МИ 2816-2012, раздел 7: изменение температуры не должно превышать ±0,2°C — иначе результаты недействительны."},
+  {id:17,t:"Эталонный ПП при поверке по МИ 2816-2012 устанавливается:",
+   a:"На байпасной линии параллельно поверяемому",b:"В лаборатории с поверочными жидкостями",
+   c:"Последовательно с поверяемым ПП в один трубопровод",d:"В отдельном трубопроводе",k:"c",
+   x:"МИ 2816-2012, раздел 9: последовательная установка в один трубопровод — одна жидкость через оба ПП."},
+  {id:18,t:"Какой коэффициент МИ 2816-2012 (Приложение А) учитывает влияние давления?",
+   a:"CTL (Coefficient of Thermal expansion of Liquid)",
+   b:"CPL (Coefficient of Pressure correction for Liquid)",
+   c:"CRL (Coefficient of Reference Laboratory)",d:"CTD (Coefficient of Temperature and Density)",k:"b",
+   x:"МИ 2816-2012, Приложение А: CPL — коэффициент сжимаемости под давлением."},
+  {id:19,t:"Минимальное число синхронных пар измерений в каждой точке расхода по МИ 2816-2012:",
+   a:"2 пары",b:"3 пары",c:"5 пар",d:"10 пар",k:"c",
+   x:"МИ 2816-2012, раздел 9: не менее 5 синхронных пар для статистической достоверности."},
+  {id:20,t:"Что оформляется по МИ 2816-2012 при превышении погрешностью допускаемого значения?",
+   a:"Свидетельство с отметкой о превышении",b:"Технический акт",
+   c:"Сертификат калибровки",d:"Извещение о непригодности",k:"d",
+   x:"МИ 2816-2012, раздел 10: при отрицательных результатах — извещение о непригодности; свидетельство не выдаётся."},
+];
+CQ.push(...CQ_MI2816);
+
+// ══ Добавка к CASES — МИ 2816-2012 ══════════════════════════════════════════
+const CASES_MI2816=[
+  {id:20,n:"Недостаточное число синхронных измерений по МИ 2816-2012",d:2,y:"Методика",f:"МИ 2816-2012, раздел 9",
+   r:[["НД на поверку","МИ 2816-2012",0],["Число синхронных пар","3 пары ←",1],
+      ["Поверяемый ПП (кг/м³)","856,4 / 856,7 / 856,5",0],["Эталонный ПП (кг/м³)","856,2 / 856,4 / 856,3",0],
+      ["Заключение","Погрешность в норме, ГОДЕН",0]],
+   o:["Показания не совпадают — прибор непригоден","Неподходящий тип эталона",
+      "3 пары — меньше минимума по МИ 2816-2012 (не менее 5 синхронных пар)",
+      "Не указаны единицы давления"],
+   a:2,h:"Сколько синхронных пар требует МИ 2816-2012 в каждой точке расхода?",
+   e:"МИ 2816-2012, раздел 9: не менее 5 синхронных пар измерений. При 3 парах результат статистически недостаточен."},
+  {id:21,n:"CTL применён вместо CPL для учёта давления",d:3,y:"Вычисление",f:"МИ 2816-2012, Приложение А",
+   r:[["Рабочее давление","3,2 МПа",0],["Применён коэффициент","CTL = 0,99812 ←",1],
+      ["Плотность после поправки","ρ = ρизм × CTL",0],["Температура","42,5°C",0]],
+   o:["CTL не применяется при P > 1 МПа","Значение CTL рассчитано неверно",
+      "Для учёта давления используется CPL, а не CTL — CTL учитывает температуру",
+      "Давление превышает допустимое для метода"],
+   a:2,h:"Какой коэффициент МИ 2816-2012 учитывает влияние давления?",
+   e:"CTL (Thermal) — поправка на температуру. CPL (Pressure) — на давление. Путаница приводит к неверному результату."},
+  {id:22,n:"Поверяемый ПП вне области применения МИ 2816-2012",d:1,y:"Методика",f:"МИ 2816-2012, раздел 1",
+   r:[["НД на поверку","МИ 2816-2012",0],["Тип жидкости","вода дистиллированная ←",1],
+      ["Измеренная плотность","998,2 кг/м³",0],["Диапазон ПП по паспорту","500–1200 кг/м³",0]],
+   o:["МИ 2816-2012 применима для любых жидкостей < 1200 кг/м³",
+      "МИ 2816-2012 — только нефть и нефтепродукты (610–1100 кг/м³); вода не входит в область применения",
+      "Ошибка в единицах — должно быть г/л","Паспортный диапазон ошибочен"],
+   a:1,h:"Для каких жидкостей предназначена МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 1: только нефть и нефтепродукты, 610–1100 кг/м³. Поверка водой не предусмотрена."},
+  {id:23,n:"Эталон на байпасной линии — нарушение МИ 2816-2012",d:2,y:"Методика",f:"МИ 2816-2012, раздел 9",
+   r:[["Схема установки","Эталон на байпасной линии ←",1],["Поверяемый ПП","основная линия",0],
+      ["Жидкость","нефть, ρ = 863 кг/м³",0],["Расход","одинаковый",0]],
+   o:["Байпасная схема допустима при одинаковом расходе",
+      "МИ 2816-2012 требует последовательной установки в один трубопровод — байпас недопустим",
+      "Ошибка в типе жидкости","Расход должен быть нулевым"],
+   a:1,h:"Как устанавливается эталонный ПП по МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 9: последовательная установка в общий трубопровод. Байпас нарушает условие синхронного измерения одной жидкости."},
+  {id:24,n:"CTL и CPL не применены при t=38°C и P=1,8 МПа",d:3,y:"Вычисление",f:"МИ 2816-2012, Приложение А",
+   r:[["Температура","38,4°C ←",1],["Давление","1,8 МПа ←",1],
+      ["Поверяемый ПП","854,7 кг/м³",0],["Эталонный ПП","854,5 кг/м³",0],["Погрешность","0,2 кг/м³",0]],
+   o:["Погрешность 0,2 кг/м³ — в норме","Ошибка в показании эталона",
+      "Не применены CTL и CPL: при t≠20°C и P>0 показания нужно привести к единым условиям перед сравнением",
+      "Число измерений недостаточно"],
+   a:2,h:"Нужно ли приводить плотность при t=38°C и P=1,8 МПа?",
+   e:"МИ 2816-2012, Приложение А: при t≠20°C и P≠0 оба показания корректируются CTL и CPL до сравнения."},
+  {id:25,n:"Произвольная форма протокола вместо Приложения В",d:1,y:"Оформление",f:"МИ 2816-2012, Приложение В",
+   r:[["Форма протокола","произвольная ←",1],["Результаты","таблица свободного формата",0],
+      ["Подпись","есть",0],["Заключение","ГОДЕН",0]],
+   o:["Форма может быть произвольной при наличии всех реквизитов",
+      "Протокол оформляется строго по форме Приложения В МИ 2816-2012",
+      "Заключение должно быть 'ПРИГОДЕН'","Подпись не требуется"],
+   a:1,h:"Какая форма протокола установлена МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 10 и Приложение В: протокол только по установленной форме. Произвольная форма недействительна."},
+  {id:26,n:"Изменение температуры 1,8°C при поверке — нарушение условий",d:2,y:"Методика",f:"МИ 2816-2012, раздел 7",
+   r:[["Изменение t в процессе поверки","Δt = 1,8°C ←",1],
+      ["Требование МИ 2816-2012","≤ 0,2°C за сеанс",0],["Число пар","5",0],["Давление","2,1 МПа (стабильно)",0]],
+   o:["Допустимо при применении CTL","Δt = 1,8°C превышает требование ≤0,2°C — условия поверки нарушены",
+      "Давление должно меняться пропорционально","5 пар недостаточно при нестабильной t"],
+   a:1,h:"Каков допустимый перепад температуры в ходе измерений?",
+   e:"МИ 2816-2012, раздел 7: Δt ≤ ±0,2°C. При Δt=1,8°C поверка проведена в недопустимых условиях — недействительна."},
+  {id:27,n:"Класс точности эталона равен классу поверяемого ПП",d:2,y:"Эталон",f:"МИ 2816-2012, раздел 5",
+   r:[["Класс точности поверяемого","0,1 кг/м³",0],["Класс точности эталона","0,2 кг/м³ ←",1],
+      ["Требование","погрешность эталона в 2–3 раза меньше",0],["Метод","непосредственное сличение",0]],
+   o:["Класс эталона не нормируется","Погрешность эталона (0,2) больше погрешности поверяемого (0,1) — нарушен принцип",
+      "Для поверки на месте эталон не нужен","Класс 0,2 лучше чем 0,1"],
+   a:1,h:"Каким должен быть класс эталона по МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 5: погрешность эталона в 2–3 раза меньше поверяемого. Равный или больший класс недопустим."},
+  {id:28,n:"Поверка только в одной точке расхода",d:2,y:"Методика",f:"МИ 2816-2012, раздел 9",
+   r:[["Рабочий диапазон расхода","0,2–2,0 кг/с",0],["Расход при поверке","1,0 кг/с (одна точка) ←",1],
+      ["Синхронных пар","5",0],["Погрешность","в допуске",0]],
+   o:["Одна точка посередине репрезентативна для диапазона",
+      "Поверка в одной точке нарушает МИ 2816-2012 — требуется несколько точек рабочего диапазона",
+      "5 пар избыточно — достаточно 3","Расход должен быть максимальным"],
+   a:1,h:"В скольких точках расхода проводятся измерения по МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 9: измерения в нескольких точках рабочего диапазона расхода. Одна точка не выявляет зависимость погрешности."},
+  {id:29,n:"Выдано свидетельство при погрешности 0,45 > Δдоп 0,3",d:1,y:"Оформление",f:"МИ 2816-2012, раздел 10",
+   r:[["Погрешность","Δ = 0,45 кг/м³ ←",1],["Допуск","Δдоп = 0,3 кг/м³",0],
+      ["Оформленный документ","Свидетельство о поверке ←",1],["Заключение","ГОДЕН",0]],
+   o:["Превышение 0,45 > 0,3 незначительно, допустимо",
+      "При Δ > Δдоп прибор НЕПРИГОДЕН — нельзя выдавать свидетельство, только извещение о непригодности",
+      "МПИ 1 год некорректен","Форма свидетельства не соответствует Приложению В"],
+   a:1,h:"Что оформляется при отрицательном результате по МИ 2816-2012?",
+   e:"МИ 2816-2012, раздел 10: при Δ > Δдоп — извещение о непригодности. Свидетельство ГОДЕН не выдаётся."},
+];
+CASES.push(...CASES_MI2816);
+
+// ══ EA — 7 разделов для входного тестирования по МИ 2816-2012 ════════════════
+const EA=[
+  {id:'s1',n:1,li:0,title:'Область применения',ref:'МИ 2816-2012, раздел 1',
+   desc:'Тип приборов, рабочая жидкость, диапазон измерений',
+   q:{t:'На какой диапазон измерений плотности распространяется МИ 2816-2012?',
+      a:'700–900 кг/м³',b:'600–1200 кг/м³',c:'610–1100 кг/м³',d:'650–1050 кг/м³',k:'c',
+      x:'МИ 2816-2012, раздел 1: 610–1100 кг/м³ для нефти и нефтепродуктов.'}},
+  {id:'s2',n:2,li:1,title:'Условия поверки',ref:'МИ 2816-2012, раздел 7',
+   desc:'Допустимые отклонения температуры в ходе поверки',
+   q:{t:'Максимальное изменение температуры жидкости за один сеанс измерений по МИ 2816-2012?',
+      a:'±1,0°C',b:'±0,5°C',c:'±0,2°C',d:'±0,05°C',k:'c',
+      x:'МИ 2816-2012, раздел 7: Δt ≤ ±0,2°C — иначе результаты недействительны.'}},
+  {id:'s3',n:3,li:4,title:'Средства поверки',ref:'МИ 2816-2012, раздел 5',
+   desc:'Требования к эталонному ПП и вспомогательному оборудованию',
+   q:{t:'Каким должен быть предел погрешности эталонного ПП по отношению к поверяемому (МИ 2816-2012, р.5)?',
+      a:'Равным пределу погрешности поверяемого ПП',
+      b:'В 2–3 раза меньше предела погрешности поверяемого ПП',
+      c:'В 2–3 раза больше',d:'Не нормируется',k:'b',
+      x:'МИ 2816-2012, раздел 5: погрешность эталона — в 2–3 раза меньше поверяемого.'}},
+  {id:'s4',n:4,li:4,title:'Метод поверки',ref:'МИ 2816-2012, раздел 9',
+   desc:'Принцип непосредственного сличения, схема установки',
+   q:{t:'Как устанавливается эталонный ПП при поверке по МИ 2816-2012?',
+      a:'На байпасной линии параллельно поверяемому',
+      b:'В лаборатории с поверочными жидкостями',
+      c:'Последовательно с поверяемым ПП в общий трубопровод',
+      d:'В отдельном трубопроводе',k:'c',
+      x:'МИ 2816-2012, раздел 9: последовательная установка — одна жидкость через оба ПП одновременно.'}},
+  {id:'s5',n:5,li:4,title:'Проведение поверки',ref:'МИ 2816-2012, раздел 9',
+   desc:'Число синхронных измерений, точки расхода',
+   q:{t:'Минимальное число синхронных пар измерений в каждой точке расхода по МИ 2816-2012?',
+      a:'2 пары',b:'3 пары',c:'5 пар',d:'10 пар',k:'c',
+      x:'МИ 2816-2012, раздел 9: не менее 5 синхронных пар для статистической достоверности.'}},
+  {id:'s6',n:6,li:3,title:'Коэффициенты CTL и CPL',ref:'МИ 2816-2012, Приложение А',
+   desc:'Поправки на температуру и давление при приведении плотности',
+   q:{t:'Для чего применяется коэффициент CPL в МИ 2816-2012 (Приложение А)?',
+      a:'Учёт изменения плотности из-за температуры',
+      b:'Поправка на вязкость жидкости',
+      c:'Учёт увеличения плотности под рабочим давлением',
+      d:'Приведение к нормальным условиям по влажности',k:'c',
+      x:'МИ 2816-2012, Приложение А: CPL — Coefficient of Pressure correction for Liquid, учитывает сжимаемость под давлением.'}},
+  {id:'s7',n:7,li:7,title:'Оформление результатов',ref:'МИ 2816-2012, раздел 10, Прил. В',
+   desc:'Протокол, свидетельство о поверке, извещение о непригодности',
+   q:{t:'Что оформляется по МИ 2816-2012 при превышении погрешностью допускаемого значения?',
+      a:'Свидетельство с отметкой о превышении',b:'Технический акт',
+      c:'Извещение о непригодности; свидетельство не выдаётся',
+      d:'Сертификат калибровки с фактической погрешностью',k:'c',
+      x:'МИ 2816-2012, раздел 10: при отрицательном результате — извещение о непригодности. Прибор направляется в ремонт.'}},
+];
+
+// ══ KB — база знаний (3 документа) ═══════════════════════════════════════════
+
+
+// ══ DOCTEXTS — полные тексты методик ══════════════════════════════════════════
+const DOCTEXTS={
+  'mi2816':{
+    code:'МИ 2816-2012',
+    title:'Преобразователи плотности поточные. Методика поверки на месте эксплуатации',
+    org:'ГНМЦ ФГУП ВНИИМ им. Д.И. Менделеева',
+    date:'06.12.2012',
+    url:'https://files.stroyinf.ru/Data2/1/4293771/4293771518.htm',
+    sections:[
+      {n:'Введение',t:'Общие сведения',body:`Настоящая рекомендация устанавливает методику первичной и периодической поверки поточных преобразователей плотности (ПП) на месте эксплуатации.<br><br>Разработана ООО «ИМС Индастриз» совместно с ГМНЦ ФГУП ВНИИМ им. Д.И. Менделеева. Вводится взамен МИ 2816-2011.<br><br><b>МПИ (межповерочный интервал):</b> определяется при утверждении типа, как правило — 1 год.`},
+      {n:'Раздел 1',t:'Область применения',body:`Настоящая рекомендация распространяется на поточные вибрационные преобразователи плотности жидкостей, входящие в состав узлов учёта товарной нефти и нефтепродуктов.<br><br><b>Диапазон измерений плотности:</b> от 610 до 1100 кг/м³.<br><br>Рекомендация устанавливает методику <b>первичной и периодической поверок</b> ПП непосредственно <b>на месте эксплуатации</b> — без демонтажа из технологического трубопровода.`},
+      {n:'Раздел 2',t:'Нормативные ссылки',body:`При разработке настоящей рекомендации использованы следующие нормативные документы:<br><br>— ГОСТ 8.024-2002 ГСИ. Государственная поверочная схема для средств измерений плотности;<br>— ГОСТ 18300-87 Спирт этиловый ректификованный технический;<br>— ГОСТ 443-76 Нефрас С2-80/120;<br>— МИ 2153-2004 Плотность нефти. Требования к МВИ ареометром;<br>— МИ 2632-2001 Плотность нефти и нефтепродуктов и коэффициенты CTL, CPL.`},
+      {n:'Раздел 3',t:'Термины, определения и сокращения',body:`<b>ПП</b> — поточный преобразователь плотности жидкостей.<br><b>РЭ</b> — рабочий эталон.<br><b>CTL</b> (Coefficient of Thermal expansion of Liquid) — коэффициент, учитывающий изменение плотности жидкости вследствие отличия её температуры от стандартной (15 °С или 20 °С).<br><b>CPL</b> (Coefficient of Pressure correction for Liquid) — коэффициент, учитывающий увеличение плотности жидкости под воздействием рабочего давления в трубопроводе.<br><b>СИКН</b> — система измерений количества и показателей качества нефти.`},
+      {n:'Раздел 4',t:'Операции поверки',body:`При проведении поверки выполняют следующие операции в указанном порядке:<br><br>4.1 Внешний осмотр (раздел 9);<br>4.2 Опробование (раздел 9);<br>4.3 Определение абсолютной погрешности (раздел 9).<br><br>Если при выполнении одной из операций получен отрицательный результат, дальнейшая поверка прекращается.`},
+      {n:'Раздел 5',t:'Средства поверки',body:`При проведении поверки применяются:<br><br><b>5.1 Эталонный поточный ПП</b> — рабочий эталон единиц плотности 1-го разряда по ГОСТ 8.024. Предел допускаемой погрешности эталонного ПП должен быть <b>в 2–3 раза меньше</b> предела допускаемой погрешности поверяемого ПП.<br><br><b>5.2 Эталонный термометр</b> — для контроля температуры жидкости в трубопроводе; диапазон от -20 до +100 °С, погрешность не более ±0,1 °С.<br><br><b>5.3 Манометр</b> — для контроля давления; класс точности не ниже 0,6.<br><br>5.4 Допускается применение средств поверки, не указанных в настоящей рекомендации, при условии соответствия их характеристик приведённым требованиям.<br><br>Все средства поверки должны иметь действующие свидетельства о поверке.`},
+      {n:'Раздел 6',t:'Требования безопасности и квалификации',body:`<b>6.1 Требования к поверителям:</b> к выполнению поверки допускаются лица, изучившие настоящую рекомендацию и эксплуатационную документацию на ПП и средства поверки, прошедшие инструктаж по технике безопасности и имеющие удостоверение поверителя.<br><br><b>6.2 Требования безопасности:</b> при проведении поверки выполняют требования правил техники безопасности, действующих на данном производственном объекте, правил работы с нефтью и нефтепродуктами, правил работы с электроустановками.`},
+      {n:'Раздел 7',t:'Условия поверки',body:`При проведении поверки соблюдают следующие условия:<br><br>— Рабочая жидкость: нефть или нефтепродукт в рабочих условиях эксплуатации;<br>— Диапазон плотности жидкости: в пределах рабочего диапазона поверяемого ПП;<br>— <b>Изменение температуры жидкости в процессе одного сеанса измерений: не более ±0,2 °С;</b><br>— Изменение давления в трубопроводе в процессе измерений: не более допустимого для данного ПП;<br>— Изменение расхода жидкости в процессе измерений: не более допустимого для данного ПП.`},
+      {n:'Раздел 8',t:'Подготовка к поверке',body:`<b>8.1</b> Перед поверкой проверяют документацию на поверяемый ПП и эталонный ПП: паспорт, эксплуатационную документацию, свидетельство о поверке РЭ.<br><br><b>8.2</b> Эталонный ПП устанавливают <b>последовательно</b> с поверяемым ПП в общий технологический трубопровод таким образом, чтобы через оба ПП одновременно протекала одна и та же жидкость с минимально возможной разностью параметров (температуры, давления).<br><br><b>8.3</b> Термометр устанавливают в непосредственной близости от ПП для контроля температуры жидкости в трубопроводе.`},
+      {n:'Раздел 9',t:'Проведение поверки и обработка результатов',body:`<b>9.1 Внешний осмотр:</b> проверяют соответствие ПП требованиям эксплуатационной документации: отсутствие механических повреждений, читаемость маркировки, целостность пломб и знаков поверки.<br><br><b>9.2 Опробование:</b> проверяют функционирование ПП в рабочих условиях: наличие и стабильность выходного сигнала, отсутствие кодов ошибок.<br><br><b>9.3 Определение погрешности:</b><br>— В рабочем диапазоне расхода задают не менее 3–5 точек;<br>— В каждой точке выполняют <b>не менее 5 синхронных пар одновременных измерений</b> поверяемым и эталонным ПП;<br>— Показания обоих ПП приводятся к единым условиям с применением коэффициентов CTL и CPL (Приложение А);<br>— Абсолютную погрешность вычисляют как разность показаний поверяемого и эталонного ПП, приведённых к единым условиям;<br>— Результаты записывают в протокол по форме Приложения В.`},
+      {n:'Раздел 10',t:'Оформление результатов поверки',body:`<b>10.1</b> При положительных результатах поверки (погрешность не превышает допускаемое значение во всех точках) выдаётся <b>свидетельство о поверке</b> установленной формы и наносится знак поверки.<br><br><b>10.2</b> При отрицательных результатах поверки выдаётся <b>извещение о непригодности</b>. Ранее выданное свидетельство аннулируется. Знаки поверки гасятся. ПП направляется в ремонт или списывается.<br><br><b>10.3</b> Протокол поверки оформляется по установленной форме <b>Приложения В</b>. Произвольная форма протокола недопустима.<br><br><b>10.4</b> Результаты поверки вносятся во ФГИС «Аршин» в установленные сроки.`},
+      {n:'Приложение А',t:'Определение CTL, CPL и приведённой плотности',body:`<b>CTL</b> (Coefficient of Thermal expansion of Liquid) — коэффициент термического расширения жидкости. Учитывает изменение плотности жидкости вследствие отличия её температуры от стандартной. Рассчитывается по таблицам или формулам в зависимости от типа нефтепродукта и его плотности при стандартных условиях.<br><br><b>CPL</b> (Coefficient of Pressure correction for Liquid) — коэффициент сжимаемости жидкости. Учитывает увеличение плотности жидкости под рабочим давлением в трубопроводе. Рассчитывается по значению давления и плотности при стандартных условиях.<br><br><b>Приведённая плотность:</b><br>ρ₁₅ = ρизм × CTL × CPL<br><br>где ρизм — плотность, измеренная ПП при рабочих условиях (t, P);<br>CTL и CPL — вычислены по стандартным алгоритмам ГОСТ Р 8.615 / МИ 2632.`},
+      {n:'Приложение В',t:'Форма протокола поверки',body:`Протокол поверки должен содержать:<br>— наименование и обозначение НД на методику поверки;<br>— наименование, тип и серийный номер поверяемого ПП;<br>— наименование, тип, серийный номер и данные о поверке эталонного ПП;<br>— дату и место проведения поверки;<br>— условия поверки (температура, давление, расход, тип жидкости);<br>— результаты измерений в каждой точке;<br>— вычисленные значения погрешностей;<br>— заключение о пригодности;<br>— подпись поверителя на каждой странице;<br>— дату следующей поверки (МПИ).`},
+    ],
+  },
+  'mi2403':{
+    code:'МИ 2403-97',
+    title:'Преобразователи плотности поточные вибрационные «Солартрон» типов 7830, 7835 и 7840. Методика поверки на месте эксплуатации',
+    org:'ГНМЦ-ВНИИР Госстандарта России, Казань',
+    date:'1997',
+    url:'https://meganorm.ru/Data2/1/4293762/4293762048.htm',
+    sections:[
+      {n:'Введение',t:'Область применения',body:`Настоящая рекомендация распространяется на поточные вибрационные преобразователи плотности жидкости типов <b>7830, 7835 и 7840</b> (изготовитель — фирма Solartron Transducers Ltd., Англия), входящие в состав <b>узлов учёта товарной нефти</b>.<br><br>Устанавливает методику первичной и периодической поверки на месте эксплуатации с использованием в качестве средств поверки автоматических плотномеров.<br><br>Допускается по настоящей методике проводить поверку преобразователей плотности в комплекте со специализированными контроллерами.<br><br><b>Межповерочный интервал — 1 год.</b>`},
+      {n:'Раздел 1',t:'Операции поверки',body:`При проведении поверки выполняют следующие операции:<br><br>— внешний осмотр (п. 7.1);<br>— опробование (п. 7.2);<br>— определение абсолютной погрешности (п. 7.3).`},
+      {n:'Раздел 2',t:'Средства поверки',body:`<b>2.1 Автоматический плотномер — рабочий эталон (РЭ)</b> плотности 1-го разряда по ГОСТ 8.024:<br>— диапазон измерений: от 790 до 910 кг/м³;<br>— пределы абсолютной погрешности: <b>±0,1 кг/м³</b>;<br>— оснащён цифровым термометром: диапазон 0–50 °С, погрешность ±0,1 °С;<br>— примеры: типа МДП, МДЛ-1.<br><br><b>2.1.2</b> Вычислительное устройство (ПЭВМ или специализированный контроллер) либо <b>частотомер типа Ч3-38</b> по ГОСТ 7590, диапазон 100–2000 Гц.<br><br><b>2.1.3</b> Термометры жидкостные стеклянные типа А, цена деления 0,1 °С, диапазон 0–50 °С, по ГОСТ 28498.<br><br><b>2.1.4</b> Манометр класса точности 0,6, диапазон 0–6 МПа.<br><br><b>2.1.5 Промывочные жидкости:</b> нефрас-С 50/170 по ГОСТ 8505, толуол.<br><br>Все применяемые СИ должны иметь действующие свидетельства или клейма о поверке.`},
+      {n:'Раздел 3',t:'Требования к квалификации поверителей',body:`К выполнению измерений при поверке допускаются лица, изучившие инструкции по эксплуатации поверяемого ПП и средств поверки, настоящую рекомендацию и <b>имеющие удостоверение поверителя</b>.`},
+      {n:'Раздел 4',t:'Требования безопасности',body:`При проведении поверки выполняют требования:<br>— правил техники безопасности при эксплуатации электроустановок потребителей;<br>— правил устройства и безопасности сосудов, работающих под давлением;<br>— правил безопасности, изложенных в эксплуатационной документации на применяемые СИ;<br>— правил безопасности, регламентирующих работу на данном технологическом объекте (на узле учёта нефти и в операторной).`},
+      {n:'Раздел 5',t:'Условия поверки',body:`При проведении поверки соблюдают следующие условия:<br><br><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:var(--bg)"><th style="padding:8px;text-align:left;border-bottom:1px solid var(--br)">Параметр</th><th style="padding:8px;text-align:right;border-bottom:1px solid var(--br)">Значение</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid var(--br)">Температура воздуха в блоке качества, °С</td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)">от 5 до 40</td></tr><tr><td style="padding:8px;border-bottom:1px solid var(--br)">Температура нефти в трубопроводе, °С</td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)">от 0 до 50</td></tr><tr><td style="padding:8px;border-bottom:1px solid var(--br)">Давление нефти в трубопроводе, МПа</td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)">до 4</td></tr><tr><td style="padding:8px;border-bottom:1px solid var(--br)">Напряжение питания, В</td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)">220, −15%/+10%, 50 Гц</td></tr><tr><td style="padding:8px;border-bottom:1px solid var(--br)">Относительная влажность, не более, %</td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)">80</td></tr><tr><td style="padding:8px;border-bottom:1px solid var(--br)"><b>Изменение плотности нефти при поверке, кг/м³</b></td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)"><b>не более 0,1 за 5 мин</b></td></tr><tr><td style="padding:8px;border-bottom:1px solid var(--br)"><b>Изменение температуры нефти, °С</b></td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)"><b>не более 0,1 за 5 мин</b></td></tr><tr><td style="padding:8px;border-bottom:1px solid var(--br)"><b>Изменение давления нефти, МПа</b></td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--br)"><b>не более 0,05 за 5 мин</b></td></tr></tbody></table>`},
+      {n:'Раздел 6',t:'Подготовка к поверке',body:`<b>6.1</b> Проверяют работоспособность и характеристики РЭ в соответствии с инструкцией по эксплуатации и с учётом особенностей применяемых средств поверки (Приложение 1).<br><br><b>Особенности подготовки РЭ типа МДП:</b><br>— Проверяют горизонтальность положения МДП, при необходимости регулируют;<br>— Промывают измерительную камеру и поплавок растворителем и толуолом;<br>— Включают контроллер и запускают рабочую программу автоматической поверки;<br>— Открывают вентили и организуют поток нефти до стабилизации температуры в камере МДП.<br><br><b>Особенности подготовки РЭ типа МДЛ:</b><br>— Промывают измерительную камеру и поплавок бензином и толуолом;<br>— Гибкими рукавами присоединяют датчик МДЛ к технологической линии последовательно с поверяемым плотномером.`},
+      {n:'Раздел 7',t:'Проведение поверки',body:`<b>7.1 Внешний осмотр</b><br>7.1.1 Устанавливают соответствие ПП по комплектности и внешнему виду требованиям эксплуатационной документации, правильность монтажа и отсутствие механических повреждений.<br>7.1.2 Проверяют наличие сертификата градуировки поверяемого плотномера и соответствие введённых в память контроллера коэффициентов значениям, приведённым в сертификате или в свидетельстве о поверке.<br><br><b>7.2 Опробование</b><br>При опробовании проверяют исправность электрической схемы и общее функционирование согласно инструкции по эксплуатации.<br><br><b>7.3 Определение абсолютной погрешности</b><br>7.3.1 Определение производится при одновременном измерении плотности нефти поверяемым и эталонным средствами при рабочих значениях температуры и давления.<br><br>7.3.2 Устанавливается расход нефти в блоке качества <b>в пределах от 0,5 до 1 м³/ч</b>. При достижении условий п.5 производят измерения плотности поверяемым и эталонным ПП, а также температуры и давления нефти.<br><br>7.3.3 При отсутствии вычислительного устройства выходной сигнал ПП измеряют частотомером и по формулам, приведённым в сертификате, вычисляют плотность.<br><br>7.3.4 Результаты записывают в протокол по форме Приложения 2.<br><br><b>7.3.5 Определение погрешности выполняют три раза.</b>`},
+      {n:'Раздел 8',t:'Обработка результатов измерений',body:`<b>8.1 Абсолютную погрешность</b> плотномера определяют по формуле:<br><br><div style="background:var(--bg);border-radius:10px;padding:14px 18px;font-family:monospace;margin:10px 0;border:1px solid var(--br)"><b>Δ = ρ − D₀</b></div><br>где <b>ρ</b> — результат измерений плотности ПП, кг/м³;<br><b>D₀</b> — результат измерений плотности рабочим эталоном, приведённый по температуре и давлению к условиям измерения поверяемого плотномера по формуле:<br><br><div style="background:var(--bg);border-radius:10px;padding:14px 18px;font-family:monospace;margin:10px 0;border:1px solid var(--br)"><b>D₀ = ρ₀ · [1 + (β + C)(t₀ − t) + γ(P − P₀)]</b></div><br>где:<br><b>β</b> — коэффициент объёмного расширения нефти при t₀ (табл. 1 прил. 2 МИ 2153);<br><b>C</b> = +23·10⁻⁶ при t₀ выше 20 °С; C = −23·10⁻⁶ при t₀ ниже 20 °С; C = 0 при t₀ = 20 °С;<br><b>γ</b> — коэффициент сжимаемости нефти (табл. 2 прил. 2 МИ 2153);<br><b>t₀, t</b> — температура нефти в РЭ и в поверяемом плотномере, °С;<br><b>P₀, P</b> — давление нефти в РЭ и в поверяемом плотномере, МПа.<br><br><b>8.2</b> Вычисления по формулам могут производиться в вычислительном устройстве РЭ.<br><br><b>8.3 Критерий годности:</b><br>— Для типов 7830 и 7835: <b>|Δ| ≤ ±0,3 кг/м³</b>;<br>— Для типа 7840: <b>|Δ| ≤ ±Δд</b>, где Δд вычисляется по Приложению 3.<br><br>Если абсолютная погрешность превышает указанные пределы — ПП <b>градуируют</b> по методике Приложения 4.`},
+      {n:'Раздел 9',t:'Оформление результатов поверки',body:`<b>9.1</b> При положительных результатах поверки плотномер признают годным к применению и выдают <b>свидетельство о поверке</b> установленной формы по ПР 50.2.006.<br><br><b>9.2</b> При отрицательных результатах поверки плотномер к применению не допускают, свидетельство аннулируют и выдают <b>извещение о непригодности</b> с указанием причин по ПР 50.2.006.`},
+      {n:'Приложение 2',t:'Протокол поверки',body:`Протокол поверки содержит следующие поля:<br><br>— Средство измерений (наименование, тип, зав.№, год выпуска, владелец);<br>— Результаты измерений (таблица из 3 строк):<br><br><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--bg)"><th style="padding:6px;border:1px solid var(--br)">#</th><th style="padding:6px;border:1px solid var(--br)">T, мкс</th><th style="padding:6px;border:1px solid var(--br)">ρ, кг/м³</th><th style="padding:6px;border:1px solid var(--br)">t, °С</th><th style="padding:6px;border:1px solid var(--br)">P, МПа</th><th style="padding:6px;border:1px solid var(--br)">ρ₀, кг/м³</th><th style="padding:6px;border:1px solid var(--br)">t₀, °С</th><th style="padding:6px;border:1px solid var(--br)">P₀, МПа</th><th style="padding:6px;border:1px solid var(--br)">D₀, кг/м³</th><th style="padding:6px;border:1px solid var(--br)">Δ, кг/м³</th></tr></thead><tbody><tr><td style="padding:6px;border:1px solid var(--br);text-align:center">1</td><td colspan="9" style="padding:6px;border:1px solid var(--br)"></td></tr><tr><td style="padding:6px;border:1px solid var(--br);text-align:center">2</td><td colspan="9" style="padding:6px;border:1px solid var(--br)"></td></tr><tr><td style="padding:6px;border:1px solid var(--br);text-align:center">3</td><td colspan="9" style="padding:6px;border:1px solid var(--br)"></td></tr></tbody></table><br>Вывод: ___________________<br><br>Подпись поверителя, дата.`},
+      {n:'Приложение 4',t:'Методика градуировки при превышении погрешности',body:`При превышении допустимой погрешности ПП подлежит <b>градуировке</b> (без снятия с линии):<br><br><b>1.</b> Вычислить среднюю погрешность по трём результатам:<br><div style="background:var(--bg);border-radius:10px;padding:12px 16px;font-family:monospace;margin:10px 0;border:1px solid var(--br)">Δср = (Δ₁ + Δ₂ + Δ₃) / 3</div><br><b>2.</b> Вычислить новое значение коэффициента K₀:<br><div style="background:var(--bg);border-radius:10px;padding:12px 16px;font-family:monospace;margin:10px 0;border:1px solid var(--br)">K₀нов = K₀ − Δср</div><br><b>3.</b> Ввести новый K₀нов в память контроллера.<br><br><b>4.</b> Определить абсолютную погрешность с новым K₀ <b>два раза</b> в соответствии с разделом 7. Если погрешность не превышает допустимое значение — ПП признают годным.`},
+    ],
+  },
+};
+
+function renderNDOverlay(){
+  const el=document.getElementById('nd-overlay-root');if(!el)return;
+  if(!S.ndDoc){el.innerHTML='';return;}
+  const doc=DOCTEXTS[S.ndDoc];if(!doc){el.innerHTML='';return;}
+  const isRed=S.ndDoc==='mi2403';
+  const col=isRed?'var(--red)':'var(--blue)';
+  const secId='nd-open-'+S.ndDoc;
+
+  const secHtml=doc.sections.map((s,i)=>{
+    const openKey=secId+'-'+i;
+    const isOpen=S.ndSecOpen===openKey;
+    return '<div style="border:1px solid var(--br);border-radius:12px;overflow:hidden;margin-bottom:6px">'+
+      '<div style="padding:14px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:'+(isOpen?'rgba(0,63,138,.04)':'var(--w)')+'"'+
+      ' onclick="set({ndSecOpen:'+(isOpen?'null':'\''+openKey+'\'')+'})">'+
+      '<div class="flex g8"><span style="font-size:11px;font-weight:700;color:var(--t3);font-family:monospace;min-width:80px">'+s.n+'</span>'+
+      '<span style="font-size:15px;font-weight:600">'+s.t+'</span></div>'+
+      '<span style="color:var(--t3)">'+(isOpen?'▲':'▼')+'</span></div>'+
+      (isOpen?'<div style="padding:16px 20px;border-top:1px solid var(--br);font-size:14px;line-height:1.75;color:var(--t1)">'+s.body+'</div>':'')+
+      '</div>';
+  }).join('');
+
+  el.innerHTML=
+    '<div class="nd-overlay" onclick="if(event.target===this)set({ndDoc:null,ndSecOpen:null})">'+
+    '<div class="nd-panel">'+
+    '<div class="nd-panel-hdr">'+
+    '<div style="flex:1">'+
+    '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:4px">Полный текст методики</div>'+
+    '<div style="font-size:17px;font-weight:900;color:'+col+'">'+doc.code+'</div>'+
+    '<div style="font-size:12px;color:var(--t2);margin-top:3px;line-height:1.4">'+doc.title+'</div>'+
+    '<div style="font-size:11px;color:var(--t3);margin-top:4px">'+doc.org+' · '+doc.date+'</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;flex-shrink:0;align-items:flex-start">'+
+    '<a href="'+doc.url+'" target="_blank" class="btn btn-gsm" style="font-size:12px">Источник ↗</a>'+
+    '<button class="btn btn-gsm" onclick="set({ndDoc:null,ndSecOpen:null})">✕</button>'+
+    '</div>'+
+    '</div>'+
+    '<div class="nd-panel-body">'+
+    '<div class="info-box mb16" style="font-size:13px">Нажмите на раздел для просмотра полного текста</div>'+
+    secHtml+
+    '</div></div></div>';
+}
+
+// ══ POSITIONS — 6 должностей с автозачислением ═══════════════════════════════
+const POSITIONS=[
+  {id:'pov_density',code:'14.1.5',dept:'Отдел поверки',
+   name:'Поверитель СИ плотности',desc:'Допуск к поверке поточных ПЧ по ГОСТ Р 8.802-2012',
+   items:[
+    {id:'l0',name:'Нормативная база (ГОСТ Р 8.802-2012)',type:'lesson',li:0,days:7},
+    {id:'l1',name:'Условия проведения поверки, п. 7.1',type:'lesson',li:1,days:7},
+    {id:'l2',name:'Внешний осмотр и опробование',type:'lesson',li:2,days:14},
+    {id:'l3',name:'Поверочные жидкости и параметры',type:'lesson',li:3,days:14},
+    {id:'l4',name:'Определение основной погрешности',type:'lesson',li:4,days:21},
+    {id:'l5',name:'Вариация показаний',type:'lesson',li:5,days:21},
+    {id:'entry',name:'Входное тестирование (порог 60%)',type:'test',days:21},
+    {id:'trainer',name:'Тренажёр',type:'trainer',days:35},
+    {id:'control',name:'Контрольный тест (порог 80%)',type:'test',days:45},
+   ]},
+  {id:'eng_metrology',code:'14.1.3',dept:'Служба ГМ',
+   name:'Инженер-метролог',desc:'Методическое обеспечение поверочной деятельности',
+   items:[
+    {id:'l0',name:'Нормативная база',type:'lesson',li:0,days:14},
+    {id:'l6',name:'Бюджет неопределённости',type:'lesson',li:6,days:21},
+    {id:'l7',name:'Оформление протоколов (Приказ Минпромторга России №2905)',type:'lesson',li:7,days:21},
+    {id:'l8',name:'МПИ и свидетельство о поверке',type:'lesson',li:8,days:28},
+    {id:'entry',name:'Входное тестирование',type:'test',days:30},
+    {id:'trainer',name:'Тренажёр',type:'trainer',days:45},
+   ]},
+  {id:'chief_metrology',code:'14.1.1',dept:'Управление',
+   name:'Главный метролог',desc:'Руководство метрологической службой',
+   items:[
+    {id:'all',name:'Все учебные материалы (10 уроков)',type:'lessons_all',days:30},
+    {id:'entry',name:'Входное тестирование',type:'test',days:14},
+    {id:'trainer',name:'Тренажёр',type:'trainer',days:45},
+    {id:'control',name:'Контрольный тест',type:'test',days:60},
+   ]},
+  {id:'head_unit',code:'14.1.2',dept:'Производство',
+   name:'Начальник участка поверки',desc:'Организация и контроль поверочных работ',
+   items:[
+    {id:'l0',name:'Нормативная база',type:'lesson',li:0,days:7},
+    {id:'l7',name:'Оформление протоколов',type:'lesson',li:7,days:14},
+    {id:'l8',name:'МПИ и свидетельство о поверке',type:'lesson',li:8,days:14},
+    {id:'entry',name:'Входное тестирование',type:'test',days:21},
+    {id:'control',name:'Контрольный тест',type:'test',days:45},
+   ]},
+  {id:'tech_kipia',code:'14.2.1',dept:'КИПиА',
+   name:'Техник КИПиА',desc:'Обслуживание контрольно-измерительных приборов',
+   items:[
+    {id:'l0',name:'Нормативная база',type:'lesson',li:0,days:30},
+    {id:'l2',name:'Внешний осмотр и опробование',type:'lesson',li:2,days:30},
+    {id:'entry',name:'Входное тестирование',type:'test',days:60},
+   ]},
+  {id:'ost_rep',code:'14.3.2',dept:'Операционный блок',
+   name:'Ответственный от ОСТ',desc:'Контроль ввода МХ, ведение документации СИКН',
+   items:[
+    {id:'l0',name:'Нормативная база',type:'lesson',li:0,days:14},
+    {id:'l7',name:'Оформление протоколов',type:'lesson',li:7,days:21},
+    {id:'entry',name:'Входное тестирование',type:'test',days:30},
+   ]},
+];
+
+// Helpers для POSITIONS
+function makeEnrollments(posId){
+  const pos=POSITIONS.find(p=>p.id===posId);
+  if(!pos)return[];
+  const now=new Date();
+  return pos.items.map(item=>{
+    const dl=new Date(now);dl.setDate(dl.getDate()+item.days);
+    return{id:item.id,name:item.name,type:item.type,li:item.li,
+           deadline:dl.toISOString(),enrolledAt:now.toISOString(),done:false,doneAt:null};
+  });
+}
+function enrollStatus(e){
+  if(e.done)return'done';
+  const left=Math.ceil((new Date(e.deadline)-new Date())/86400000);
+  if(left<0)return'overdue';
+  if(left<=3)return'urgent';
+  return'pending';
+}
+function fmtDl(iso){return new Date(iso).toLocaleDateString('ru-RU',{day:'2-digit',month:'short'});}
+
+// eaPlan — сравнение теста и самооценки
+function eaPlan(){
+  return EA.map(s=>{
+    const ok=S.eaTA[s.id]===s.q.k;
+    const sf=S.eaSA[s.id];
+    let cls,pri,icon,label;
+    if(!ok&&sf==='know')  {cls='pr-critical';pri=0;icon='🚨';label='Критический пробел — переоценка знаний';}
+    else if(!ok&&sf==='doubt'){cls='pr-study';   pri=1;icon='📚';label='Требует изучения';}
+    else if(!ok&&sf==='dont') {cls='pr-study';   pri=1;icon='📚';label='Требует изучения';}
+    else if(ok&&sf==='dont')  {cls='pr-check';   pri=2;icon='⚡';label='Проверьте: возможно случайный ответ';}
+    else if(ok&&sf==='doubt') {cls='pr-reinforce';pri=3;icon='📈';label='Закрепить уверенность';}
+    else                      {cls='pr-strong';  pri=4;icon='✅';label='Уверенное знание';}
+    return{...s,ok,sf,cls,pri,icon,label};
+  }).sort((a,b)=>a.pri-b.pri);
+}
+
+
+// ══ Патч sLogin — добавляем выбор должности в форму регистрации ══════════════
+// (эта функция заменяет оригинальную в логике сборки)
+function sLogin(){
+  const m=S.loginMode;
+  const logoSVG='<svg width="52" height="57" viewBox="0 0 54 60" xmlns="http://www.w3.org/2000/svg"><polygon points="27,3 49,15 49,45 27,57 5,45 5,15" fill="#003F8A"/><path d="M13,30 C18,18 23,42 27,30 C31,18 36,42 41,30" stroke="white" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="27" cy="30" r="5" fill="#CC1F1F"/><circle cx="27" cy="30" r="2.2" fill="white"/></svg>';
+  const posHint=S.lPos?'<div class="f13 c-t2 mt8">📋 Будет назначено <b>'+POSITIONS.find(p=>p.id===S.lPos)?.items.length+' обязательных курсов</b></div>':'';
+  const posOpts=POSITIONS.map(p=>'<option value="'+p.id+'"'+(S.lPos===p.id?' selected':'')+'>'+p.name+' ('+p.code+')</option>').join('');
+  return`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;background:linear-gradient(160deg,#EEF4FF 0%,#FBF0F0 50%,#EEF4FF 100%)">
+  <div style="width:100%;max-width:400px">
+    <div class="ta-c mb32">
+      <div style="display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:8px">
+        ${logoSVG}
+        <div style="display:flex;flex-direction:column;gap:2px;line-height:1.1">
+          <div style="font-size:28px;font-weight:900;letter-spacing:-.5px;color:#003F8A">МЕТРОЛОГ</div>
+          <div style="font-size:16px;font-weight:700;color:#CC1F1F;letter-spacing:2.5px">.ПРО</div>
+        </div>
+      </div>
+      <div class="body-sm c-t2">Платформа обучения поверителей</div>
+    </div>
+    <div class="card-lg" style="padding:36px">
+      <div class="seg mb24">
+        <button class="seg-btn ${m==='login'?'on':''}" onclick="set({loginMode:'login'})">Вход</button>
+        <button class="seg-btn ${m==='reg'?'on':''}" onclick="set({loginMode:'reg'})">Регистрация</button>
+      </div>
+      ${m==='reg'?`
+      <div class="field"><label class="flbl">Полное имя</label><input class="inp" placeholder="Иванов Иван Иванович" value="${S.lName}" oninput="S.lName=this.value"></div>
+      <div class="field"><label class="flbl">Организация</label><input class="inp" placeholder="ООО ИзмерТех" value="${S.lOrg}" oninput="S.lOrg=this.value"></div>
+      <div class="field"><label class="flbl">Должность</label>
+        <select class="inp" style="cursor:pointer" onchange="S.lPos=this.value;set({})">
+          <option value="">— выберите должность —</option>
+          ${posOpts}
+        </select>
+        ${posHint}
+      </div>`:''}
+      <div class="field"><label class="flbl">E-mail</label><input class="inp" type="email" placeholder="user@metrolog.pro" value="${S.lEmail}" oninput="S.lEmail=this.value" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="field"><label class="flbl">Пароль</label><input class="inp" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-p btn-full mt8" onclick="doLogin()">${m==='login'?'Войти':'Создать аккаунт'}</button>
+    </div>
+    <div class="ta-c mt20"><button class="btn btn-gsm" onclick="set({scr:'landing'})">← На главную</button></div>
+  </div></div>`;
+}
+
+// ══ Карточка "База знаний" и "Enrollments" для sDash ══════════════════════════
+// Вставляем через patch после render sDash (добавляем в HTML новые секции)
+// Функция getDashExtra() возвращает доп. HTML блоки
+function getDashExtra(){
+  const u=S.user;
+  const ep=S.ePassed,tt=CASES.length;
+  let extra='';
+  // Личный план обучения
+  if(S.enrollments&&S.enrollments.length>0){
+    const done=S.enrollments.filter(e=>e.done).length;
+    const ovd=S.enrollments.filter(e=>enrollStatus(e)==='overdue').length;
+    extra+=`<div class="card mb16" style="padding:24px;border:1px solid rgba(0,63,138,.18)">
+      <div class="between mb14">
+        <div><div class="eyebrow mb4">Мой план обучения</div><div class="fw7 f17">${u?.positionName||'Должность'}</div>
+        <div class="f13 c-t2 mt4">${done} из ${S.enrollments.length} выполнено</div></div>
+        <button class="btn btn-psm" onclick="set({scr:'enrollments'})">Открыть →</button>
+      </div>
+      <div class="pbar" style="height:5px"><div class="pfill" style="width:${Math.round(done/S.enrollments.length*100)}%"></div></div>
+      ${ovd>0?`<div class="mt10 f13" style="color:var(--red)">⚠ Просроченных: ${ovd}</div>`:''}
+    </div>`;
+  }
+  // База знаний
+  extra+=`<div class="card mb16" style="padding:22px;border:1px solid rgba(204,31,31,.2);background:linear-gradient(145deg,rgba(204,31,31,.04),#fff)">
+    <div class="between">
+      <div><div class="eyebrow mb6" style="color:var(--red)">📚 База знаний</div>
+      <div class="fw7 f17 mb4">Нормативные документы</div>
+      <div class="flex g6 mt8">${KB.map(d=>'<span class="badge b-blue">'+d.code+'</span>').join('')}</div></div>
+      <button class="btn btn-psm" style="background:var(--red);flex-shrink:0" onclick="set({scr:'knowledge',kbDoc:null,kbSection:null})">Открыть →</button>
+    </div>
+  </div>`;
+  return extra;
+}
+
+// ══ ВХОДНОЕ ТЕСТИРОВАНИЕ (EA) ══════════════════════════════════════════════════
+function sEA(){
+  if(S.eaPhase==='test')   return sEATest();
+  if(S.eaPhase==='self')   return sEASelf();
+  if(S.eaPhase==='result') return sEAResult();
+  return sEAIntro();
+}
+
+function eaProgBar(phase){
+  return '<div class="ea-prog">'+EA.map((_,i)=>{
+    const on=phase==='test'?(i<S.eaIdx?'done':i===S.eaIdx?'cur':''):
+               phase==='self'?(i<S.eaIdx?'done':i===S.eaIdx?'cur':''):'done';
+    return '<div class="ea-pd '+on+'"></div>';
+  }).join('')+'</div>';
+}
+
+function sEAIntro(){
+  return`<div>${navBar('dash',false)}
+<div class="page"><div class="ea-wrap">
+  <div class="eyebrow mb8">Входное тестирование</div>
+  <div class="h1 mb8">Два модуля по МИ 2816-2012</div>
+  <div class="f15 c-t2 mb24">7 разделов методики. Сначала тест, затем самооценка. По итогам — персональный план.</div>
+  <div class="mod-grid mb20">
+    <div class="mcard mc-active" style="cursor:default">
+      <div style="font-size:26px">📝</div>
+      <div class="fw7 f17">Модуль 1 — Тестирование</div>
+      <div class="f13 c-t2">7 вопросов, один на каждый раздел МИ 2816-2012</div>
+    </div>
+    <div class="mcard mc-active" style="cursor:default">
+      <div style="font-size:26px">🎯</div>
+      <div class="fw7 f17">Модуль 2 — Самооценка</div>
+      <div class="f13 c-t2">Те же 7 разделов: знаю / сомневаюсь / не знаю</div>
+    </div>
+  </div>
+  <div class="info-box mb20">💡 Результат теста сравнивается с самооценкой. Несоответствие — сигнал о скрытых пробелах.</div>
+  <button class="btn btn-p btn-full" onclick="set({eaPhase:'test',eaIdx:0,eaFB:false})">Начать тестирование →</button>
+</div></div></div>`;
+}
+
+function sEATest(){
+  const s=EA[S.eaIdx],q=s.q,n=EA.length;
+  const pick=S.eaTA[s.id]||null,fb=S.eaFB;
+  const opts=['a','b','c','d'].map(k=>{
+    let cls='opt';
+    if(fb){if(k===q.k)cls+=' ok';else if(k===pick&&k!==q.k)cls+=' no';}
+    else if(k===pick)cls+=' sel';
+    const mark=fb&&k===q.k?'<span style="margin-left:auto;color:var(--green)">✓</span>':
+               (fb&&k===pick&&k!==q.k?'<span style="margin-left:auto;color:var(--red)">✗</span>':'');
+    return`<button class="${cls}" onclick="${fb?'':'eaTPick(\''+k+'\')'}" ${fb?'style="cursor:default"':''}>
+      <span class="okey">${k.toUpperCase()}</span><span style="flex:1">${q[k]}</span>${mark}
+    </button>`;
+  }).join('');
+  return`<div>${navBar(null,false)}
+<div class="page"><div class="ea-wrap">
+  <div class="between mb8"><span class="eyebrow">Модуль 1 · Тест</span><span class="f13 mono fw6 c-blue">${S.eaIdx+1} / ${n}</span></div>
+  ${eaProgBar('test')}
+  <div class="f11 fw6 c-t3 mb6" style="text-transform:uppercase;letter-spacing:.1em">📌 ${s.ref}</div>
+  <div class="fw7 f17 mb16 c-blue">${s.title}</div>
+  <div class="card mb14" style="padding:22px"><div class="eyebrow mb8">Вопрос ${S.eaIdx+1}</div>
+    <div style="font-size:18px;font-weight:500;line-height:1.5">${q.t}</div></div>
+  <div class="col mb16" style="gap:8px">${opts}</div>
+  ${fb&&q.x?`<div class="explain mb16"><b>Пояснение: </b>${q.x}</div>`:''}
+  <div class="between">
+    <div class="f13 c-t3">${s.desc}</div>
+    ${!fb?`<button class="btn btn-p" ${!pick?'disabled':''} onclick="set({eaFB:true})">Проверить →</button>`
+        :`<button class="btn btn-p" onclick="eaTNext()">${S.eaIdx<n-1?'Следующий →':'К самооценке →'}</button>`}
+  </div>
+</div></div></div>`;
+}
+
+function sEASelf(){
+  const s=EA[S.eaIdx],n=EA.length;
+  return`<div>${navBar(null,false)}
+<div class="page"><div class="ea-wrap">
+  <div class="between mb8"><span class="eyebrow" style="color:var(--orange)">Модуль 2 · Самооценка</span><span class="f13 mono fw6" style="color:var(--orange)">${S.eaIdx+1} / ${n}</span></div>
+  ${eaProgBar('self')}
+  <div class="f11 fw6 mb6" style="text-transform:uppercase;letter-spacing:.1em;color:var(--orange)">📌 ${s.ref}</div>
+  <div class="fw7 f17 mb6">${s.title}</div>
+  <div class="f14 c-t2 mb20">${s.desc}</div>
+  <div class="card mb20" style="padding:18px;text-align:center">
+    <div class="f15 fw6">Как вы оцениваете своё знание этого раздела?</div>
+  </div>
+  <div class="self-grid">
+    <button class="self-btn sb-know" onclick="eaSPick('know')">
+      <span style="font-size:30px">🟢</span>
+      <span style="font-size:15px;font-weight:600">Знаю</span>
+      <span style="font-size:12px;color:var(--t2)">Уверен в этом разделе</span>
+    </button>
+    <button class="self-btn sb-doubt" onclick="eaSPick('doubt')">
+      <span style="font-size:30px">🟡</span>
+      <span style="font-size:15px;font-weight:600">Сомневаюсь</span>
+      <span style="font-size:12px;color:var(--t2)">Не до конца уверен</span>
+    </button>
+    <button class="self-btn sb-dont" onclick="eaSPick('dont')">
+      <span style="font-size:30px">🔴</span>
+      <span style="font-size:15px;font-weight:600">Не знаю</span>
+      <span style="font-size:12px;color:var(--t2)">Нужно изучить</span>
+    </button>
+  </div>
+</div></div></div>`;
+}
+
+function sEAResult(){
+  const plan=eaPlan();
+  const correct=plan.filter(s=>s.ok).length;
+  const score=Math.round(correct/EA.length*100);
+  const passed=score>=60;
+  const slfLbl={'know':'🟢 Знаю','doubt':'🟡 Сомневаюсь','dont':'🔴 Не знаю'};
+  const priLbl={0:'🚨 Критический пробел',1:'📚 Изучить',2:'⚡ Проверить',3:'📈 Закрепить',4:'✅ Освоен'};
+  const rows=plan.sort((a,b)=>a.n-b.n).map(s=>
+    `<div style="display:grid;grid-template-columns:1fr 60px 130px;gap:8px;padding:8px 0;border-top:1px solid var(--br);align-items:center">
+      <div class="f14">${s.n}. ${s.title}</div>
+      <div style="text-align:center;font-size:16px">${s.ok?'✅':'❌'}</div>
+      <div style="text-align:center;font-size:12px">${slfLbl[s.sf]||'—'}</div>
+    </div>`).join('');
+  const planRows=plan.map(s=>`
+    <div class="plan-row ${s.cls}">
+      <div style="font-size:22px;flex-shrink:0">${s.icon}</div>
+      <div style="flex:1">
+        <div class="f12 fw6 c-t3 mb1">${priLbl[s.pri]}</div>
+        <div class="fw6 f15">${s.title}</div>
+        <div class="f12 c-t2">${s.ref}</div>
+      </div>
+      ${s.pri<=3?`<button class="btn btn-psm" style="flex-shrink:0;font-size:12px" onclick="set({scr:'learn',lLesson:${s.li}})">Урок →</button>`:''}
+    </div>`).join('');
+  return`<div>${navBar('dash',false)}
+<div class="page"><div class="ea-wrap" style="max-width:780px">
+  <div class="card mb16" style="padding:24px;border:1px solid ${passed?'rgba(40,205,65,.25)':'rgba(255,59,48,.2)'}">
+    <div class="stat-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="stat-card ta-c"><div class="stat-val" style="color:${passed?'var(--green)':'var(--red)'}">${score}%</div><div class="stat-lbl">Тест</div></div>
+      <div class="stat-card ta-c"><div class="stat-val c-blue">${correct}/${EA.length}</div><div class="stat-lbl">Верных</div></div>
+      <div class="stat-card ta-c"><div class="stat-val" style="color:${plan.filter(s=>s.pri===0).length>0?'var(--red)':'var(--t3)'}">${plan.filter(s=>s.pri===0).length}</div><div class="stat-lbl">Пробелов</div></div>
+      <div class="stat-card ta-c"><div class="stat-val" style="color:var(--green)">${plan.filter(s=>s.pri===4).length}</div><div class="stat-lbl">Освоено</div></div>
+    </div>
+  </div>
+  <div class="eyebrow mb10">Тест vs Самооценка</div>
+  <div class="card mb16" style="padding:18px">
+    <div style="display:grid;grid-template-columns:1fr 60px 130px;gap:8px;margin-bottom:6px">
+      <div class="f11 fw6 c-t3" style="text-transform:uppercase">Раздел</div>
+      <div class="f11 fw6 c-t3 ta-c" style="text-transform:uppercase">Тест</div>
+      <div class="f11 fw6 c-t3 ta-c" style="text-transform:uppercase">Самооценка</div>
+    </div>
+    ${rows}
+  </div>
+  <div class="eyebrow mb10">Индивидуальный план обучения</div>
+  ${planRows}
+  <div class="divider"></div>
+  <div class="between">
+    <button class="btn btn-g" onclick="set({scr:'dash'})">На главную</button>
+    <div class="flex g8">
+      <button class="btn btn-g" onclick="set({eaPhase:'intro',eaIdx:0,eaTA:{},eaSA:{},eaFB:false})">Повторить</button>
+      <button class="btn btn-p" onclick="startTrainer()">К тренажёру →</button>
+    </div>
+  </div>
+</div></div></div>`;
+}
+
+function eaTPick(k){const s=EA[S.eaIdx];set({eaTA:{...S.eaTA,[s.id]:k}});}
+function eaTNext(){
+  const next=S.eaIdx+1;
+  if(next<EA.length){set({eaIdx:next,eaFB:false});}
+  else{const c=EA.filter(s=>S.eaTA[s.id]===s.q.k).length;const sc=Math.round(c/EA.length*100);
+    set({eaPhase:'self',eaIdx:0,eScore:sc,ePassed:sc>=60});
+    toast('Тест завершён: '+sc+'%','info');}
+}
+function eaSPick(val){
+  const s=EA[S.eaIdx];const sa={...S.eaSA,[s.id]:val};
+  const next=S.eaIdx+1;
+  if(next<EA.length)set({eaSA:sa,eaIdx:next});
+  else set({eaSA:sa,eaPhase:'result'});
+}
+
+// ══ БАЗА ЗНАНИЙ ═══════════════════════════════════════════════════════════════
+function sKnowledge(){
+  const doc=KB.find(d=>d.id===S.kbDoc);
+  if(doc) return sKnowledgeDoc(doc);
+  const cards=KB.map(d=>`
+    <div class="card" style="padding:22px;cursor:pointer;border:1px solid var(--br);margin-bottom:10px"
+         onclick="set({kbDoc:'${d.id}',kbSection:null})">
+      <div class="between mb10">
+        <div class="flex g8"><span class="badge b-blue fw6">${d.code}</span><span class="badge b-green">${d.status}</span></div>
+        <span class="f12 c-t3">${d.date}</span>
+      </div>
+      <div class="fw7 f17 mb6">${d.title}</div>
+      <div class="f13 c-t2 mb10">${d.scope}</div>
+      <div class="f12 c-t3 mb12">Разработан: ${d.dev}</div>
+      <div class="flex g8">
+        <button class="btn btn-psm" onclick="event.stopPropagation();set({kbDoc:'${d.id}',kbSection:null})">Открыть →</button>
+        <a href="${d.url}" target="_blank" class="btn btn-gsm" style="font-size:13px;padding:8px 16px" onclick="event.stopPropagation()">Источник ↗</a>
+      </div>
+    </div>`).join('');
+  return`<div>${navBar('dash',true)}
+<div class="page"><div class="wrap" style="padding-top:28px;padding-bottom:80px">
+  <div class="eyebrow mb8">База знаний</div>
+  <div class="h1 mb6">Нормативные документы</div>
+  <div class="f15 c-t2 mb24">Методики измерений и поверки, применяемые на платформе</div>
+  ${cards}
+</div></div></div>`;
+}
+
+function sKnowledgeDoc(doc){
+  const sections=doc.sections.map((s,i)=>{
+    const open=S.kbSection===i;
+    const body=open?`<div style="padding:14px 18px 18px;border-top:1px solid var(--br)"><div class="f14 c-t1" style="line-height:1.75;padding-left:12px;border-left:3px solid var(--blue)">${s.body}</div></div>`:'';
+    return`<div style="background:var(--w);border:1.5px solid ${open?'rgba(0,63,138,.2)':'var(--br)'};border-radius:var(--rsm);overflow:hidden;margin-bottom:6px">
+      <div style="padding:14px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="set({kbSection:${open?'null':i}})">
+        <div class="flex g8"><span class="badge b-gray" style="min-width:26px;justify-content:center;font-family:monospace">${s.n}</span><span class="fw6 f15">${s.t}</span></div>
+        <span class="f13 c-t3">${open?'▲':'▼'}</span>
+      </div>${body}</div>`;
+  }).join('');
+  const refs=doc.refs.map(r=>`
+    <div class="flex g10" style="padding:10px 14px;background:var(--bg);border-radius:10px;border:1px solid var(--br);margin-bottom:6px">
+      <span class="badge b-blue" style="flex-shrink:0;white-space:nowrap">${r.code}</span>
+      <span class="f13 c-t2">${r.title}</span>
+    </div>`).join('');
+  return`<div>${navBar(null,true)}
+<div class="page"><div class="wrap" style="max-width:820px;padding-top:28px;padding-bottom:80px">
+  <div class="flex g8 mb20">
+    <button class="btn btn-gsm" onclick="set({scr:'knowledge',kbDoc:null,kbSection:null})">← База знаний</button>
+    <span class="f13 c-t3">/</span><span class="f13 c-t2">${doc.code}</span>
+  </div>
+  <div class="card mb16" style="padding:28px;border:1px solid rgba(0,63,138,.15)">
+    <div class="flex g8 mb12"><span class="badge b-blue" style="font-size:14px;padding:5px 14px">${doc.code}</span><span class="badge b-green">${doc.status}</span></div>
+    <div class="h2 mb8">${doc.title}</div>
+    <div class="f15 c-t2 mb16">${doc.scope}</div>
+    <div class="stat-grid mb16" style="grid-template-columns:repeat(2,1fr)">
+      <div class="stat-card"><div class="f13 fw6 c-t1">${doc.date}</div><div class="stat-lbl">Дата утверждения</div></div>
+      <div class="stat-card"><div class="f13 fw6 c-t1">${doc.replaces}</div><div class="stat-lbl">Заменяет</div></div>
+    </div>
+    <div class="f13 c-t2 mb12">Разработан: ${doc.dev}</div>
+    <a href="${doc.url}" target="_blank" class="btn btn-gsm" style="font-size:13px">Открыть источник ↗</a>
+  </div>
+  <div class="eyebrow mb12">Разделы методики</div>
+  ${sections}
+  <div class="eyebrow mb12 mt20">Нормативные ссылки</div>
+  ${refs}
+</div></div></div>`;
+}
+
+// ══ ПЛАН ЗАЧИСЛЕНИЯ ══════════════════════════════════════════════════════════
+function sEnrollments(){
+  const en=S.enrollments||[];
+  const pos=POSITIONS.find(p=>p.id===S.user?.positionId);
+  const done=en.filter(e=>e.done).length;
+  const ovd=en.filter(e=>enrollStatus(e)==='overdue').length;
+  const stCfg={
+    done:{c:'var(--green)',border:'rgba(40,205,65,.2)',label:'Выполнено'},
+    overdue:{c:'var(--red)',border:'rgba(204,31,31,.25)',label:'Просрочено'},
+    urgent:{c:'var(--orange)',border:'rgba(255,149,0,.3)',label:'Срочно'},
+    pending:{c:'var(--t3)',border:'var(--br)',label:'В срок'},
+  };
+  const rows=en.map((e,i)=>{
+    const st=enrollStatus(e);const cfg=stCfg[st];
+    const left=Math.ceil((new Date(e.deadline)-new Date())/86400000);
+    const lbl=st==='done'?`✓ Выполнено ${e.doneAt?fmtDl(e.doneAt):''}`:
+               st==='overdue'?`⚠ Просрочено — дедлайн ${fmtDl(e.deadline)} (${Math.abs(left)} дн. назад)`:
+               st==='urgent'?`⏰ Срочно — до ${fmtDl(e.deadline)} (${left} дн.)`:
+               `Срок до ${fmtDl(e.deadline)} (${left} дн.)`;
+    return`<div style="padding:14px 16px;border:1px solid ${cfg.border};border-radius:12px;display:flex;align-items:center;gap:12px;${e.done?'opacity:.65':''}">
+      <div style="font-size:18px;flex-shrink:0">${{lesson:'📖',test:'📝',trainer:'🔍',lessons_all:'📚'}[e.type]||'📌'}</div>
+      <div style="flex:1"><div class="f15 fw5 ${e.done?'c-t2':''}" style="${e.done?'text-decoration:line-through':''}">${e.name}</div>
+      <div class="f12 mt4" style="color:${cfg.c}">${lbl}</div></div>
+      ${!e.done?`<button class="btn btn-gsm f11" onclick="markEnroll(${i})">✓</button>`:''}
+    </div>`;
+  }).join('');
+  return`<div>${navBar('dash',true)}
+<div class="page"><div class="wrap" style="padding-top:28px;padding-bottom:80px">
+  <div class="between mb20">
+    <div><div class="eyebrow mb6">Мой план обучения</div>
+    <div class="h2">${pos?.name||'Должность'}</div>
+    <div class="f13 c-t2 mt4">${pos?pos.dept+' · Код '+pos.code:''}</div></div>
+    <div class="ta-c"><div class="score-xl c-blue" style="font-size:48px">${done}<span style="font-size:20px;color:var(--t3)">/${en.length}</span></div><div class="caption mt4">выполнено</div></div>
+  </div>
+  ${en.length?`<div class="pbar mb20" style="height:6px"><div class="pfill" style="width:${Math.round(done/en.length*100)}%"></div></div>`:''}
+  ${en.length===0?`<div class="card ta-c" style="padding:40px"><div style="font-size:36px;margin-bottom:12px">📋</div><div class="h3 mb8">План не назначен</div><div class="f15 c-t2 mb20">Зарегистрируйтесь с указанием должности.</div><button class="btn btn-p" onclick="set({scr:'login',loginMode:'reg'})">Зарегистрироваться →</button></div>`
+  :`<div class="col g8">${rows}</div>`}
+</div></div></div>`;
+}
+
+function markEnroll(i){
+  const en=[...S.enrollments];
+  en[i]={...en[i],done:true,doneAt:new Date().toISOString()};
+  set({enrollments:en});toast('Курс выполнен ✓','info');
+}
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let S={
+  scr:'landing',
+  loginMode:'login', lEmail:'', lName:'', lOrg:'',
+  user:null,
+  // entry test
+  eQ:0,ePick:null,eFB:false,eAns:{},eScore:null,ePassed:false,
+  // control test
+  cQ:0,cPick:null,cFB:false,cAns:{},cScore:null,cPassed:false,
+  // error trainer
+  tIdx:0,tPick:null,tRes:null,tHint:false,tSolved:new Set(),
+  // learning
+  lLesson:-1,lCompleted:new Set(),lCaseIdx:0,lCasePick:null,lCaseFB:false,
+  // admin
+  adminTab:'entry',
+  adminQ:{text:'',a:'',b:'',c:'',d:'',ans:'a'},
+  // notification
+  notif:null,
+};
+function set(p){Object.assign(S,p);render()}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+let _tt=null;
+function toast(msg,type='ok'){
+  const el=document.getElementById('toast');
+  el.className='t-'+type; el.textContent=msg; el.style.display='block';
+  if(_tt)clearTimeout(_tt);
+  _tt=setTimeout(()=>el.style.display='none',3000);
+}
+function proto(rows){
+  return'<table class="ptb">'+rows.map(r=>`<tr class="${r[2]?'err':''}"><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')+'</table>';
+}
+function diffB(d){return`<span class="badge b-${{1:'easy',2:'med',3:'hard'}[d]}">${{1:'Лёгкий',2:'Средний',3:'Сложный'}[d]}</span>`}
+function typeB(y){return`<span class="badge b-type">${y}</span>`}
+function scoreFn(ans,qs){let ok=0;qs.forEach(q=>{if(ans[q.id]===q.k)ok++});return Math.round(ok/qs.length*100)}
+function navBar(back,showUser){
+  const u=S.user;
+  return`<nav class="nav">
+    <div class="nav-brand" onclick="set({scr:S.user?'dash':'landing'})">${brand()}</div>
+    <div class="nav-right">
+      ${showUser&&u?`<span class="nav-user">${firstName(u.name)}</span>`:''}
+      ${back?`<button class="btn btn-gsm" onclick="set({scr:'${back}'})">${back==='dash'?'← Назад':'← Главная'}</button>`:''}
+      ${showUser&&u?`<button class="btn btn-gsm" onclick="goLogout()">Выйти</button>`:''}
+      ${!u&&S.scr==='landing'?`<button class="btn btn-psm" onclick="set({scr:'login'})">Войти</button>`:''}
+    </div>
+  </nav>`;
+}
+function firstName(n){if(!n)return'';const p=n.trim().split(/\s+/);return p.length>=2?p[1]:p[0];}
+function brand(){
+  const ico='<svg width="28" height="31" viewBox="0 0 54 60" xmlns="http://www.w3.org/2000/svg"><polygon points="27,3 49,15 49,45 27,57 5,45 5,15" fill="#003F8A"/><path d="M13,30 C18,18 23,42 27,30 C31,18 36,42 41,30" stroke="white" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="27" cy="30" r="5" fill="#CC1F1F"/><circle cx="27" cy="30" r="2.2" fill="white"/></svg>';
+  return ico+'<span class="nav-name" style="display:flex;flex-direction:column;gap:1px;line-height:1.1"><span style="font-size:14px;font-weight:900;letter-spacing:-.3px;color:#003F8A">МЕТРОЛОГ</span><span style="font-size:10px;font-weight:700;color:#CC1F1F;letter-spacing:1.5px">.ПРО</span></span>';
+}
+function userInitials(){const n=(S.user?.name||'П');return n.split(' ').slice(0,2).map(w=>w[0]).join('')}
+
+// ══════════════════════════════════════════
+// SCREEN: LANDING
+// ══════════════════════════════════════════
+function sLanding(){
+  return`<div>
+${navBar(null,false)}
+<div class="page">
+  <!-- Hero -->
+  <div class="hero" id="hero">
+    <canvas id="hero-anim" class="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-eyebrow mb16">Метролог.ПРО</div>
+        <h1 class="hero-title">Проверка знаний<br>и обучение<br>метрологов.</h1>
+        <p class="hero-sub mt20">Обучение, тестирование и допуск специалистов по поверке преобразователей плотности жидкостей.</p>
+        <div class="hero-ctas mt32">
+          <button class="btn btn-p" onclick="set({scr:'login'})">Начать обучение</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-icon">📚</div>
+          <div class="fw7 f17 mb8">10 учебных уроков</div>
+          <div class="f13 c-t2">Из нормативных документов: ГОСТ Р 8.802, Приказ №2905, РМГ 43</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-icon">🔍</div>
+          <div class="fw7 f17 mb8">Тренажёр</div>
+          <div class="f13 c-t2">20 кейсов с реальными ошибками в протоколах поверки</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-icon">🏆</div>
+          <div class="fw7 f17 mb8">Допуск с удостоверением</div>
+          <div class="f13 c-t2">Контрольный тест и выдача удостоверения после сдачи</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="feature-strip">
+    <div class="wrap">
+      <div class="ta-c mb40">
+        <div class="eyebrow mb12">Возможности платформы</div>
+        <div class="h1">Всё для подготовки поверителя.</div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <div class="fw7 f19 mb10">Входной тест</div>
+          <div class="body-sm c-t2">Проверка базовых знаний перед началом обучения. Порог допуска — 60%.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="fw7 f19 mb10">Тренажёр протоколов</div>
+          <div class="body-sm c-t2">Анализируйте реальные фрагменты протоколов поверки и находите ошибки.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <div class="fw7 f19 mb10">Контрольный тест</div>
+          <div class="body-sm c-t2">Итоговая аттестация с порогом 80%. При успехе — удостоверение.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ND strip -->
+  <div class="nd-strip" style="padding:48px 0">
+    <div class="wrap ta-c">
+      <div class="eyebrow mb8">Нормативная база</div>
+      <div class="h3 mb6">Методики измерений</div>
+      <div class="f15 c-t2 mb28">Нажмите на методику, чтобы увидеть ключевые моменты</div>
+      <div class="nd-cards">
+        <div class="nd-card" onclick="set({ndDoc:'mi2816'})">
+          <div class="nd-card-code">МИ 2816-2012</div>
+        </div>
+        <div class="nd-card red" onclick="set({ndDoc:'mi2403'})">
+          <div class="nd-card-code">МИ 2403-97</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: LOGIN
+// ══════════════════════════════════════════
+function sLogin(){
+  const m=S.loginMode;
+  return`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;background:linear-gradient(160deg,#fff 0%,#f0f4ff 60%,#f5f5f7 100%)">
+  <div style="width:100%;max-width:400px">
+    <div class="ta-c mb32">
+      <div style="font-size:36px;color:var(--blue);margin-bottom:12px">⬡</div>
+      <div class="h2 mb8">Метролог<span class="c-blue">.ПРО</span></div>
+      <div class="body-sm c-t2">Платформа обучения поверителей преобразователей плотности</div>
+    </div>
+    <div class="card-lg" style="padding:36px">
+      <div class="seg mb24">
+        <button class="seg-btn ${m==='login'?'on':''}" onclick="set({loginMode:'login'})">Вход</button>
+        <button class="seg-btn ${m==='reg'?'on':''}" onclick="set({loginMode:'reg'})">Регистрация</button>
+      </div>
+      ${m==='reg'?`
+      <div class="field"><label class="flbl">Полное имя</label><input class="inp" placeholder="Иванов Иван Иванович" value="${S.lName}" oninput="S.lName=this.value"></div>
+      <div class="field"><label class="flbl">Организация</label><input class="inp" placeholder="ООО ИзмерТех" value="${S.lOrg}" oninput="S.lOrg=this.value"></div>`:''}
+      <div class="field"><label class="flbl">E-mail</label><input class="inp" type="email" placeholder="user@metrolog.pro" value="${S.lEmail}" oninput="S.lEmail=this.value" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="field"><label class="flbl">Пароль</label><input class="inp" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-p btn-full mt8" onclick="doLogin()">${m==='login'?'Войти':'Создать аккаунт'}</button>
+      ${m==='login'?`<div class="ta-c caption mt16">Демо: <code style="color:var(--blue)">student@metrolog.pro</code></div>`:''}
+    </div>
+    <div class="ta-c mt20"><button class="btn btn-gsm" onclick="set({scr:'landing'})">← На главную</button></div>
+  </div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: DASHBOARD
+// ══════════════════════════════════════════
+function sDash(){
+  const ep=S.ePassed,td=S.tSolved.size,tt=CASES.length,tr=td>=tt&&tt>0,cp=S.cPassed,lc=S.lCompleted.size;
+  function pstep(n,lbl,sub,st){
+    const nc=st==='done'?'done':st==='act'?'act':'lock';
+    const lc2=st==='done'?'var(--green)':st==='act'?'var(--blue)':'var(--t3)';
+    return`<div class="pipe-step"><div class="pipe-node ${nc}">${st==='done'?'✓':n}</div>
+      <div class="f12 fw6 mt2" style="color:${lc2}">${lbl}</div>
+      <div class="caption mt4">${sub}</div></div>`;
+  }
+  function mc(ico,title,sub,status,st,action){
+    const cl=st==='done'?'mc-done':st==='act'?'mc-active':st==='pur'?'mc-purple':'mc-lock';
+    const sc=st==='done'?'var(--green)':st==='act'?'var(--blue)':st==='pur'?'var(--purple)':'var(--t3)';
+    const bc=st==='done'?'btn-green':st==='act'?'btn-psm':st==='pur'?'btn-purple':'btn-gsm';
+    return`<div class="mcard ${cl} ${st==='lock'?'mc-lock':''}">
+      <div style="font-size:26px">${ico}</div>
+      <div class="fw7 f17">${title}</div>
+      <div class="f13 c-t2">${sub}</div>
+      <div class="f13 fw6" style="color:${sc}">${status}</div>
+      ${action?`<button class="btn ${bc}" style="margin-top:auto;align-self:flex-start" onclick="${action}">${st==='done'?'Открыть':'Начать'}</button>`:`<button class="btn btn-gsm" disabled style="margin-top:auto;align-self:flex-start">Заблокировано</button>`}
+    </div>`;
+  }
+  return`<div>${navBar(null,true)}
+<div class="page">
+<div class="wrap" style="padding-top:32px;padding-bottom:80px">
+
+  <!-- Greeting + quick stats -->
+  <div class="between mb28">
+    <div>
+      <div class="eyebrow mb8">Личный кабинет</div>
+      <div class="h1">Добрый день, ${firstName(S.user?.name)||'Поверитель'}.</div>
+      ${S.user?.org?`<div class="f15 c-t2 mt6">${S.user.org}</div>`:''}
+    </div>
+    <div class="flex g8">
+      <button class="btn btn-gsm" onclick="set({scr:'profile'})">Профиль</button>
+      ${S.user?.role==='admin'?`<button class="btn btn-gsm c-purple" style="border-color:rgba(175,82,222,.3)" onclick="set({scr:'admin'})">⚙ Панель НД</button>`:''}
+    </div>
+  </div>
+
+  <!-- Learning card -->
+  <div class="card mb16" style="padding:28px;border:1px solid rgba(175,82,222,.2);background:linear-gradient(145deg,rgba(175,82,222,.05),#fff)">
+    <div class="between">
+      <div>
+        <div class="eyebrow c-purple mb10">Подготовка</div>
+        <div class="h2 mb8">Учебные материалы из НД</div>
+        <div class="f15 c-t2">10 уроков · ГОСТ Р 8.802, Приказ №2905, РМГ 43, ФЗ №102-ФЗ</div>
+      </div>
+      <div class="ta-c" style="flex-shrink:0">
+        <div class="score-xl c-purple" style="font-size:52px">${lc}<span style="font-size:22px;color:var(--t3)">/10</span></div>
+        <div class="caption mt6">уроков изучено</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:3px;margin:18px 0 16px">${LESSONS.map((_,i)=>`<div style="flex:1;height:3px;border-radius:2px;background:${S.lCompleted.has(i)?'var(--purple)':'rgba(0,0,0,.09)'};transition:background .3s"></div>`).join('')}</div>
+    <button class="btn btn-purple" onclick="set({scr:'learn',lLesson:-1})">Открыть учебные материалы →</button>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="card mb16" style="padding:28px">
+    <div class="eyebrow mb20">Маршрут допуска</div>
+    <div class="pipeline">
+      ${pstep('1','Входной тест',ep?`${S.eScore}%`:'необязательный',ep?'done':'act')}
+      <div class="pipe-line ${ep||td>0?'done':''}"></div>
+      ${pstep('2','Тренажёр',`${td}/${tt} кейсов`,tr?'done':'act')}
+      <div class="pipe-line ${tr?'done':''}"></div>
+      ${pstep('3','Контрольный',cp?`${S.cScore}%`:'порог 80%',cp?'done':tr?'act':'lock')}
+    </div>
+  </div>
+
+  <!-- Module cards -->
+  <div class="mod-grid mb16">
+    ${mc('📝','Входной тест','Необязательный · МИ 2816-2012',ep?`Пройден · ${S.eScore}%`:'Пропустить можно',ep?'done':'act',"startEntry()")}
+    ${mc('🔍','Тренажёр',`${CASES.length} протоколов`,tr?`Завершён ${tt}/${tt}`:`${td}/${tt} решено`,tr?'done':'act',"startTrainer()")}
+    ${mc('📋','Контрольный тест','Вопросы из НД',cp?`Допуск · ${S.cScore}%`:'Доступен',cp?'done':'act',"startControl()")}
+    ${mc('🏆','Удостоверение','Выдаётся после успешной сдачи',cp?'Доступно':'После контрольного теста',cp?'done':'lock',cp?"set({scr:'cert'})":'')}
+  </div>
+
+  ${cp?`<div class="card" style="padding:24px;border:1px solid rgba(40,205,65,.25);background:rgba(40,205,65,.05);display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <div><div class="fw7 f17 mb8" style="color:var(--green)">🏆 Допуск получен!</div><div class="f15 c-t2">Контрольный тест: <b>${S.cScore}%</b></div></div>
+    <button class="btn btn-green" style="flex-shrink:0" onclick="set({scr:'cert'})">Открыть удостоверение →</button>
+  </div>`:''}
+</div></div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: TEST (entry & control)
+// ══════════════════════════════════════════
+function sTest(isE){
+  const QS=isE?EQ:CQ,qi=isE?S.eQ:S.cQ,pick=isE?S.ePick:S.cPick,fb=isE?S.eFB:S.cFB,ans=isE?S.eAns:S.cAns,q=QS[qi],total=QS.length;
+  const pct=Math.round((qi+1)/total*100);
+  return`<div>${navBar('dash',false)}
+<div class="page"><div class="slim" style="padding-top:32px;padding-bottom:80px">
+  <div class="between mb20">
+    <span class="eyebrow">${isE?'Входной тест':'Контрольный тест'}</span>
+    <span class="f15 mono fw6 c-blue">${qi+1} / ${total}</span>
+  </div>
+  <div class="pbar mb24"><div class="pfill" style="width:${pct}%"></div></div>
+  <div class="card mb16" style="padding:28px;border:1px solid rgba(0,113,227,.14)">
+    <div class="eyebrow mb12">Вопрос ${qi+1}</div>
+    <div style="font-size:19px;font-weight:500;line-height:1.45">${q.t}</div>
+  </div>
+  <div class="col mb20" style="gap:8px">
+    ${['a','b','c','d'].map(k=>{
+      let cls='opt';
+      if(fb){if(k===q.k)cls+=' ok';else if(k===ans[q.id]&&k!==q.k)cls+=' no';}
+      else if(k===pick)cls+=' sel';
+      const m=fb&&k===q.k?'<span style="margin-left:auto;color:var(--green)">✓</span>':(fb&&k===ans[q.id]&&k!==q.k?'<span style="margin-left:auto;color:var(--red)">✗</span>':'');
+      return`<button class="${cls}" onclick="${fb?'':'pickOpt(\''+k+'\','+(isE?1:0)+')'}" ${fb?'style="cursor:default"':''}>
+        <span class="okey">${k.toUpperCase()}</span><span style="flex:1">${q[k]}</span>${m}
+      </button>`;
+    }).join('')}
+  </div>
+  ${fb&&q.x?`<div class="explain mb20"><b>Пояснение: </b>${q.x}</div>`:''}
+  <div style="display:flex;justify-content:flex-end">
+    ${!fb
+      ?`<button class="btn btn-p" ${!pick?'disabled':''} onclick="confirmOpt(${isE?1:0})">Проверить ответ</button>`
+      :`<button class="btn btn-p" onclick="nextQ(${isE?1:0})">${qi<total-1?'Следующий вопрос →':'Завершить тест →'}</button>`}
+  </div>
+</div></div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: RESULTS
+// ══════════════════════════════════════════
+function sResults(isE){
+  const QS=isE?EQ:CQ,sc=isE?S.eScore:S.cScore,passed=isE?S.ePassed:S.cPassed,ans=isE?S.eAns:S.cAns,thresh=isE?60:80,correct=QS.filter(q=>ans[q.id]===q.k).length;
+  return`<div>${navBar('dash',false)}
+<div class="page"><div class="slim" style="padding-top:32px;padding-bottom:80px">
+  <div class="card-lg mb24" style="padding:36px;text-align:center;border:1px solid ${passed?'rgba(40,205,65,.22)':'rgba(255,59,48,.18)'};background:${passed?'linear-gradient(145deg,rgba(40,205,65,.05),#fff)':'linear-gradient(145deg,rgba(255,59,48,.04),#fff)'}">
+    <div class="score-xl" style="color:${passed?'var(--green)':'var(--red)'}">${sc}%</div>
+    <div class="h3 mt12" style="color:${passed?'var(--green)':'var(--red)'}">${passed?'Тест пройден ✓':'Тест не пройден'}</div>
+    <div class="body-sm c-t2 mt8">Правильных: ${correct} из ${QS.length} · Порог: ${thresh}%</div>
+    <div class="stat-grid mt24">
+      <div class="stat-card"><div class="stat-val c-blue">${correct}</div><div class="stat-lbl">Верных</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--t3)">${QS.length-correct}</div><div class="stat-lbl">Ошибок</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:${passed?'var(--green)':'var(--red)'}">${sc}%</div><div class="stat-lbl">Результат</div></div>
+    </div>
+    <div class="flex mt24" style="justify-content:center;flex-wrap:wrap;gap:10px">
+      <button class="btn btn-g" onclick="set({scr:'dash'})">На главную</button>
+      ${!passed?`<button class="btn btn-p" onclick="${isE?'startEntry()':'startControl()'}">Повторить</button>`:''}
+      ${passed&&isE?`<button class="btn btn-p" onclick="startTrainer()">К тренажёру ошибок →</button>`:''}
+      ${passed&&!isE?`<button class="btn btn-green" onclick="set({scr:'cert'})">Получить удостоверение →</button>`:''}
+    </div>
+  </div>
+  <div class="eyebrow mb14">Разбор ответов</div>
+  <div class="col" style="gap:8px">
+    ${QS.map((q,i)=>{const ua=ans[q.id],ok=ua===q.k;return`<div class="rev ${ok?'ok':'no'}">
+      <div class="rev-dot" style="background:${ok?'rgba(40,205,65,.12)':'rgba(255,59,48,.1)'};color:${ok?'var(--green)':'var(--red)'}">${ok?'✓':'✗'}</div>
+      <div style="flex:1">
+        <div class="f15 mb8">${i+1}. ${q.t}</div>
+        ${!ok?`<div class="f13 mb4" style="color:var(--red)">Ваш: ${(ua||'—').toUpperCase()} — ${ua?q[ua]:'не отвечено'}</div>`:''}
+        <div class="f13" style="color:var(--green)">Верно: ${q.k.toUpperCase()} — ${q[q.k]}</div>
+        ${q.x?`<div class="f13 c-t2 mt8" style="font-style:italic">${q.x}</div>`:''}
+      </div></div>`;}).join('')}
+  </div>
+</div></div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: TRAINER
+// ══════════════════════════════════════════
+function sTrainer(){
+  if(S.tIdx>=CASES.length)return`<div>${navBar('dash',false)}<div class="page"><div class="slim" style="padding-top:120px;text-align:center">
+    <div style="font-size:56px;margin-bottom:20px">🎯</div>
+    <div class="h2 mb12" style="color:var(--green)">Все 20 кейсов решены!</div>
+    <div class="body c-t2 mb32">Вы освоили типовые ошибки в протоколах поверки.</div>
+    <button class="btn btn-p" onclick="set({scr:'dash'})">Перейти к контрольному тесту →</button>
+  </div></div></div>`;
+  const c=CASES[S.tIdx],res=S.tRes;
+  return`<div>${navBar('dash',false)}
+<div class="page"><div class="mid" style="padding-top:32px;padding-bottom:80px">
+  <div class="between mb24">
+    <span class="eyebrow">Тренажёр · Кейс ${S.tIdx+1}/${CASES.length}</span>
+    <div class="flex g8">
+      <span class="f13 c-blue fw6">Решено: ${S.tSolved.size}/${CASES.length}</span>
+      <div class="dots">${CASES.map((_,i)=>`<button class="dot" style="background:${S.tSolved.has(i)?'var(--green)':i===S.tIdx?'var(--blue)':'rgba(0,0,0,.12)'}" onclick="jumpCase(${i})"></button>`).join('')}</div>
+    </div>
+  </div>
+  <div class="card mb16" style="padding:28px;border:1px solid rgba(0,113,227,.14)">
+    <div class="between mb14">
+      <div><div class="h3">${c.n}</div></div>
+      <div class="flex g6 flex-shrink-0">${diffB(c.d)} ${typeB(c.y)}</div>
+    </div>
+    <div class="eyebrow mb10" style="color:var(--orange)">⚠ Фрагмент протокола — найдите ошибку</div>
+    <div class="proto-wrap">${proto(c.r)}</div>
+    ${c.f?`<div class="caption mt10">НД: ${c.f}</div>`:''}
+  </div>
+  ${S.tHint&&!res?`<div class="hintbox mb14"><span style="font-size:18px">💡</span><span>${c.h}</span></div>`:''}
+  ${!res?`
+  <div class="card mb16" style="padding:24px">
+    <div class="f15 fw6 c-t2 mb14">Выберите описание ошибки:</div>
+    <div class="col" style="gap:8px">${c.o.map((o,i)=>`<button class="opt ${S.tPick===i?'sel':''}" onclick="S.tPick=${i};set({})"><span class="okey">${i+1}</span><span>${o}</span></button>`).join('')}</div>
+  </div>
+  <div class="between">
+    <button class="btn btn-gsm" onclick="set({tHint:!S.tHint})">💡 ${S.tHint?'Скрыть подсказку':'Подсказка'}</button>
+    <button class="btn btn-p" ${S.tPick===null?'disabled':''} onclick="checkCase()">Проверить →</button>
+  </div>`:`
+  <div class="card mb16" style="padding:24px;border:1px solid ${res.ok?'rgba(40,205,65,.25)':'rgba(255,59,48,.2)'};background:${res.ok?'rgba(40,205,65,.05)':'rgba(255,59,48,.03)'}">
+    <div class="fw7 f17 mb12" style="color:${res.ok?'var(--green)':'var(--red)'}">${res.ok?'✓ Верно!':'✗ Неверно — правильный ответ:'}</div>
+    ${!res.ok?`<div class="f15 mb12">${c.o[c.a]}</div>`:''}
+    <div class="explain">${c.e}</div>
+  </div>
+  <div style="display:flex;justify-content:flex-end">
+    <button class="btn btn-p" onclick="nextCase()">${S.tIdx<CASES.length-1?'Следующий кейс →':'Завершить тренажёр →'}</button>
+  </div>`}
+</div></div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: LEARNING MODULE
+// ══════════════════════════════════════════
+function sLearn(){
+  if(S.lLesson>=0&&S.lLesson<LESSONS.length)return sLearnLesson(S.lLesson);
+  return`<div>${navBar('dash',true)}
+<div class="page"><div class="wrap" style="padding-top:32px;padding-bottom:80px">
+  <div class="between mb32">
+    <div>
+      <div class="eyebrow mb8">Учебные материалы</div>
+      <div class="h1">Обучение из нормативных документов</div>
+      <div class="body-sm c-t2 mt8">Выберите урок для изучения</div>
+    </div>
+    <div class="ta-c">
+      <div class="score-xl c-purple" style="font-size:48px">${S.lCompleted.size}<span style="font-size:20px;color:var(--t3)">/10</span></div>
+      <div class="caption mt6">завершено</div>
+    </div>
+  </div>
+  <div class="col" style="gap:6px">
+    ${LESSONS.map((l,i)=>{const done=S.lCompleted.has(i);return`<div class="lesson-item ${done?'done-l':''}" onclick="openLesson(${i})">
+      <div class="lnum ${done?'ln-done':''}">${done?'✓':(i+1)}</div>
+      <div style="flex:1">
+        <div class="flex g8 mb4"><span>${l.icon}</span><span class="fw6 f17">${l.title}</span>${done?`<span class="badge b-green" style="margin-left:auto">Изучен</span>`:''}</div>
+        <div class="f13 c-t3">${l.nd} · ${l.cases.length} кейса</div>
+      </div>
+      <span class="f17 c-t3">›</span>
+    </div>`;}).join('')}
+  </div>
+</div></div></div>`;
+}
+
+function sLearnLesson(idx){
+  const l=LESSONS[idx],cases=l.cases,ci=S.lCaseIdx,allDone=ci>=cases.length,done=S.lCompleted.has(idx);
+  let caseHtml='';
+  if(allDone){
+    caseHtml=`<div class="explain mb16"><b>✓ Все ${cases.length} кейса(ов) разобраны!</b></div>`;
+    if(!done)caseHtml+=`<button class="btn btn-p btn-full" onclick="completeLesson(${idx})">Отметить как изученный ✓</button>`;
+    else caseHtml+=`<div style="background:rgba(40,205,65,.07);border:1px solid rgba(40,205,65,.2);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div class="fw6 f15" style="color:var(--green)">✓ Урок изучен</div>
+      <button class="btn btn-gsm" onclick="set({scr:'learn',lLesson:-1})">К списку</button></div>`;
+  } else {
+    const c=cases[ci];
+    caseHtml=`<div class="flex mb14 g8"><div class="ps-strip">${cases.map((_,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${i<ci?'var(--green)':i===ci?'var(--blue)':'rgba(0,0,0,.12)'}"></div>`).join('')}</div><span class="f13 c-t2">Кейс ${ci+1} из ${cases.length}</span></div>`;
+    caseHtml+=`<div class="card mb14" style="padding:22px;border:1px solid rgba(255,149,0,.18);background:rgba(255,149,0,.02)"><div class="fw6 f17 mb10">${c.q}</div>${c.frag?`<div class="proto-wrap mt10">${proto(c.frag)}</div>`:''}</div>`;
+    caseHtml+=`<div class="col mb14" style="gap:8px">${cases[ci].opts.map((o,i)=>{let cls='opt';if(S.lCaseFB){if(i===c.a)cls+=' ok';else if(i===S.lCasePick&&i!==c.a)cls+=' no';}else if(i===S.lCasePick)cls+=' sel';const m=S.lCaseFB&&i===c.a?'<span style="margin-left:auto;color:var(--green)">✓</span>':(S.lCaseFB&&i===S.lCasePick&&i!==c.a?'<span style="margin-left:auto;color:var(--red)">✗</span>':'');return`<button class="${cls}" onclick="${S.lCaseFB?'':'pickLC('+i+')'}" ${S.lCaseFB?'style="cursor:default"':''}><span class="okey">${i+1}</span><span style="flex:1">${o}</span>${m}</button>`;}).join('')}</div>`;
+    if(S.lCaseFB&&c.exp)caseHtml+=`<div class="explain mb14"><b>Пояснение: </b>${c.exp}</div>`;
+    caseHtml+=`<div class="between"><div></div>${!S.lCaseFB?`<button class="btn btn-p" ${S.lCasePick===null?'disabled':''} onclick="checkLC()">Проверить →</button>`:`<button class="btn btn-p" onclick="nextLC()">${ci<cases.length-1?'Следующий кейс →':'Завершить кейсы →'}</button>`}</div>`;
+  }
+  return`<div>${navBar(null,true)}
+<div class="page"><div class="mid" style="padding-top:32px;padding-bottom:80px">
+  <div class="flex g8 mb20">
+    <button class="btn btn-gsm" onclick="set({scr:'learn',lLesson:-1,lCaseIdx:0,lCasePick:null,lCaseFB:false})">← К урокам</button>
+    <span class="nd-chip mb0" style="margin-bottom:0">${l.nd}</span>
+    ${done?'<span class="badge b-green">Изучен</span>':''}
+  </div>
+  <div class="learn-layout">
+    <div class="sidebar">
+      <div class="eyebrow mb12">Уроки</div>
+      <div class="col" style="gap:4px">
+        ${LESSONS.map((ll,i)=>{const d=S.lCompleted.has(i);return`<div class="lesson-item ${d?'done-l':''} ${i===idx?'on':''}" onclick="openLesson(${i})" style="padding:10px 12px">
+          <div class="lnum ${d?'ln-done':i===idx?'ln-on':''}" style="min-width:22px;height:22px;font-size:10px">${d?'✓':(i+1)}</div>
+          <div class="f13 fw${i===idx?'6':'5'}" style="color:${i===idx?'var(--blue)':'var(--t1)'};line-height:1.3">${ll.icon} ${ll.title}</div>
+        </div>`;}).join('')}
+      </div>
+    </div>
+    <div>
+      <div class="flex g8 mb20"><span style="font-size:24px">${l.icon}</span><div><div class="h2">${l.title}</div><div class="f13 c-t3 mt4">Урок ${idx+1} из ${LESSONS.length}</div></div></div>
+      <div class="mb24">${l.body}</div>
+      <div class="case-section">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:16px">📋 Практические кейсы из НД</div>
+        ${caseHtml}
+      </div>
+      <div class="divider"></div>
+      <div class="between mt4">
+        ${idx>0?`<button class="btn btn-gsm" onclick="openLesson(${idx-1})">← Урок ${idx}</button>`:'<div></div>'}
+        ${idx<LESSONS.length-1?`<button class="btn btn-gsm" onclick="openLesson(${idx+1})">Урок ${idx+2} →</button>`:'<div></div>'}
+      </div>
+    </div>
+  </div>
+</div></div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: CERTIFICATE
+// ══════════════════════════════════════════
+function sCert(){
+  const d=new Date(),ds=d.toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'});
+  const cid='МПР-'+d.getFullYear()+'-'+String(Math.floor(Math.random()*9000+1000));
+  return`<div>${navBar('dash',true)}
+<div class="page" style="background:var(--bg)"><div class="slim" style="padding-top:40px;padding-bottom:80px">
+  <div class="between mb24">
+    <button class="btn btn-gsm" onclick="set({scr:'dash'})">← На главную</button>
+    <button class="btn btn-gsm" onclick="window.print()">Распечатать 🖨</button>
+  </div>
+  <div class="cert-card">
+    <div class="cert-bg"></div><div class="cert-wm">⬡</div>
+    <div style="position:relative;z-index:1">
+      <div class="eyebrow c-t2 mb16" style="letter-spacing:.2em">Метролог.ПРО</div>
+      <div class="display mb8" style="font-size:40px">Удостоверение</div>
+      <div class="body c-t2 mb40">о прохождении учебного курса</div>
+      <div class="body-sm c-t2 mb8">Подтверждает, что</div>
+      <div class="h1 c-blue mb8">${S.user?.name||'Слушатель'}</div>
+      ${S.user?.org?`<div class="body c-t2 mb40">${S.user.org}</div>`:'<div class="mb40"></div>'}
+      <div style="background:var(--bg);border-radius:14px;padding:18px 28px;display:inline-block;margin-bottom:32px;border:1px solid var(--br)">
+        <div class="fw6 f17">«Поверка преобразователей плотности жидкостей»</div>
+        <div class="f13 c-t2 mt6">в соответствии с ГОСТ Р 8.802-2012</div>
+      </div>
+      <div class="stat-grid mb40">
+        <div class="stat-card"><div class="stat-val c-green">${S.eScore}%</div><div class="stat-lbl">Входной тест</div></div>
+        <div class="stat-card"><div class="stat-val c-green">20/20</div><div class="stat-lbl">Тренажёр</div></div>
+        <div class="stat-card"><div class="stat-val c-green">${S.cScore}%</div><div class="stat-lbl">Контрольный</div></div>
+      </div>
+      <div class="flex" style="justify-content:space-between;border-top:1px solid var(--br);padding-top:28px;align-items:flex-end">
+        <div class="ta-c"><div style="width:130px;height:1px;background:var(--br);margin:0 auto 10px"></div><div class="caption c-t2">Руководитель курса</div></div>
+        <div class="ta-c"><div class="display c-t3" style="font-size:36px;color:rgba(0,113,227,.15)">⬡</div><div class="caption mono c-t3">${cid}</div><div class="caption c-t3 mt4">${ds}</div></div>
+        <div class="ta-c"><div style="width:130px;height:1px;background:var(--br);margin:0 auto 10px"></div><div class="caption c-t2">Слушатель</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="ta-c caption c-t3 mt16">Учебное удостоверение не заменяет официальную аттестацию поверителя.</div>
+</div></div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: PROFILE
+// ══════════════════════════════════════════
+function sProfile(){
+  const ep=S.ePassed,cp=S.cPassed,td=S.tSolved.size,lc=S.lCompleted.size;
+  return`<div>${navBar('dash',false)}
+<div class="page"><div class="slim" style="padding-top:32px;padding-bottom:80px">
+  <div class="eyebrow mb24">Профиль</div>
+  <!-- User card -->
+  <div class="card-lg mb16" style="padding:28px">
+    <div class="flex mb20" style="align-items:flex-start;gap:20px">
+      <div class="profile-avatar">${userInitials()}</div>
+      <div style="flex:1">
+        <div class="h2 mb4">${S.user?.name||'Пользователь'}</div>
+        <div class="f15 c-t2">${S.user?.email||''}</div>
+        ${S.user?.org?`<div class="f13 c-t3 mt4">${S.user.org}</div>`:''}
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="stat-grid mt16">
+      <div class="profile-stat"><div class="stat-val" style="color:${ep?'var(--green)':'var(--t3)'}">${ep?S.eScore+'%':'—'}</div><div class="stat-lbl">Входной тест</div></div>
+      <div class="profile-stat"><div class="stat-val" style="color:${td>0?'var(--blue)':'var(--t3)'}">${td}/20</div><div class="stat-lbl">Кейсов решено</div></div>
+      <div class="profile-stat"><div class="stat-val" style="color:${cp?'var(--green)':'var(--t3)'}">${cp?S.cScore+'%':'—'}</div><div class="stat-lbl">Контрольный</div></div>
+    </div>
+  </div>
+  <!-- Progress -->
+  <div class="card mb16" style="padding:24px">
+    <div class="fw6 f17 mb16">Прогресс обучения</div>
+    <div class="flex between mb10"><span class="f15">Учебные материалы</span><span class="f15 fw6 c-purple">${lc}/10 уроков</span></div>
+    <div class="pbar mb4"><div class="pfill" style="width:${lc*10}%;background:var(--purple)"></div></div>
+    <div class="divider"></div>
+    <div class="flex between mb10"><span class="f15">Тренажёр</span><span class="f15 fw6 c-blue">${td}/20 кейсов</span></div>
+    <div class="pbar mb4"><div class="pfill" style="width:${td/20*100}%"></div></div>
+    <div class="divider"></div>
+    <div class="flex between mb10"><span class="f15">Входной тест</span><span class="f15 fw6" style="color:${ep?'var(--green)':'var(--t3)'}">${ep?'Пройден':'Не пройден'}</span></div>
+    <div class="flex between"><span class="f15">Контрольный тест</span><span class="f15 fw6" style="color:${cp?'var(--green)':'var(--t3)'}">${cp?'Пройден':'Не пройден'}</span></div>
+  </div>
+  <!-- Actions -->
+  <div class="card" style="padding:24px">
+    <div class="fw6 f17 mb16">Действия</div>
+    <div class="col" style="gap:10px">
+      ${cp?`<button class="btn btn-psm" style="align-self:flex-start" onclick="set({scr:'cert'})">🏆 Открыть удостоверение</button>`:''}
+      <button class="btn btn-gsm" style="align-self:flex-start" onclick="set({scr:'learn',lLesson:-1})">📚 Учебные материалы</button>
+      <button class="btn btn-gsm" style="align-self:flex-start;color:var(--red)" onclick="goLogout()">Выйти из аккаунта</button>
+    </div>
+  </div>
+</div></div></div>`;
+}
+
+// ══════════════════════════════════════════
+// SCREEN: ADMIN PANEL
+// ══════════════════════════════════════════
+function sAdmin(){
+  const tab=S.adminTab,q=S.adminQ;
+  const questions=tab==='entry'?EQ:CQ;
+  return`<div>${navBar('dash',false)}
+<div class="page"><div class="wrap" style="padding-top:32px;padding-bottom:80px">
+  <div class="between mb24">
+    <div><div class="eyebrow mb8">Администрирование</div><div class="h1">Панель управления вопросами</div></div>
+    <div class="badge b-orange" style="font-size:13px;padding:6px 14px">Только для загрузки НД-контента</div>
+  </div>
+  <div class="info-box mb20">💡 Здесь добавляются вопросы из нормативных документов. Не придумывайте — вставляйте дословно из НД с указанием источника.</div>
+
+  <div class="seg mb24" style="max-width:340px">
+    <button class="seg-btn ${tab==='entry'?'on':''}" onclick="set({adminTab:'entry'})">Входной тест (${EQ.length})</button>
+    <button class="seg-btn ${tab==='control'?'on':''}" onclick="set({adminTab:'control'})">Контрольный (${CQ.length})</button>
+  </div>
+
+  <!-- Add new question -->
+  <div class="admin-section mb16">
+    <div class="fw6 f17 mb16">Добавить вопрос из НД</div>
+    <div class="field"><label class="flbl">Текст вопроса</label><textarea class="inp" placeholder="Точный текст вопроса из нормативного документа..." oninput="S.adminQ={...S.adminQ,text:this.value}">${q.text}</textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div><label class="flbl">А)</label><input class="inp inp-sm" placeholder="Вариант А" value="${q.a}" oninput="S.adminQ={...S.adminQ,a:this.value}"></div>
+      <div><label class="flbl">Б)</label><input class="inp inp-sm" placeholder="Вариант Б" value="${q.b}" oninput="S.adminQ={...S.adminQ,b:this.value}"></div>
+      <div><label class="flbl">В)</label><input class="inp inp-sm" placeholder="Вариант В" value="${q.c}" oninput="S.adminQ={...S.adminQ,c:this.value}"></div>
+      <div><label class="flbl">Г)</label><input class="inp inp-sm" placeholder="Вариант Г" value="${q.d}" oninput="S.adminQ={...S.adminQ,d:this.value}"></div>
+    </div>
+    <div class="field">
+      <label class="flbl">Правильный ответ</label>
+      <div class="flex g8">
+        ${['a','b','c','d'].map(k=>`<button class="btn ${S.adminQ.ans===k?'btn-psm':'btn-gsm'}" onclick="S.adminQ={...S.adminQ,ans:'${k}'}">${k.toUpperCase()}</button>`).join('')}
+      </div>
+    </div>
+    <button class="btn btn-p" onclick="adminAddQ()">Добавить вопрос</button>
+  </div>
+
+  <!-- Existing questions -->
+  <div class="admin-section">
+    <div class="fw6 f17 mb16">Текущие вопросы (${questions.length})</div>
+    ${questions.length===0?'<div class="f15 c-t2">Вопросов пока нет</div>':questions.map((q,i)=>`
+    <div class="admin-q">
+      <div class="admin-q-num">Вопрос ${i+1} · Верный ответ: ${q.k.toUpperCase()}</div>
+      <div class="f15 fw5 mb8">${q.t}</div>
+      <div class="tag-strip">
+        ${['a','b','c','d'].map(k=>`<span class="badge ${q.k===k?'b-green':'b-gray'}">${k.toUpperCase()}) ${q[k]}</span>`).join('')}
+      </div>
+      <div class="flex g8 mt12">
+        <button class="btn btn-red" style="padding:6px 12px;font-size:12px" onclick="adminDelQ(${i})">Удалить</button>
+      </div>
+    </div>`).join('')}
+  </div>
+</div></div></div>`;
+}
+
+// Admin actions
+function adminAddQ(){
+  const q=S.adminQ;
+  if(!q.text||!q.a||!q.b||!q.c||!q.d){toast('Заполните все поля','err');return}
+  const arr=S.adminTab==='entry'?EQ:CQ;
+  const newQ={id:Date.now(),t:q.text,a:q.a,b:q.b,c:q.c,d:q.d,k:q.ans,x:''};
+  arr.push(newQ);
+  set({adminQ:{text:'',a:'',b:'',c:'',d:'',ans:'a'}});
+  toast('Вопрос добавлен ✓','info');
+}
+function adminDelQ(i){
+  const arr=S.adminTab==='entry'?EQ:CQ;
+  arr.splice(i,1);
+  set({});
+  toast('Вопрос удалён');
+}
+
+// ══════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════
+function doLogin(){
+  const name=S.lName||'Иванов Иван Иванович';
+  const role=S.lEmail.includes('admin')?'admin':'user';
+  const isReg=S.loginMode==='reg';
+  const pos=POSITIONS.find(p=>p.id===S.lPos);
+  const enrollments=isReg&&S.lPos?makeEnrollments(S.lPos):S.enrollments;
+  set({scr:'dash',
+    user:{name,email:S.lEmail||'student@metrolog.pro',org:S.lOrg||null,role,
+          positionId:isReg?S.lPos:null,positionName:isReg&&pos?pos.name:null},
+    enrollments,lPos:''});
+  if(isReg&&enrollments.length)
+    toast('Зачислено: '+enrollments.length+' обязательных курсов','info');
+  else
+    toast('Добро пожаловать, '+firstName(name)+'!');
+}
+function goLogout(){set({scr:'landing',user:null,eQ:0,ePick:null,eFB:false,eAns:{},eScore:null,ePassed:false,cQ:0,cPick:null,cFB:false,cAns:{},cScore:null,cPassed:false})}
+function startEntry(){set({scr:'ea',eaPhase:'intro',eaIdx:0,eaTA:{},eaSA:{},eaFB:false,eScore:null,ePassed:false});}
+function startTrainer(){set({scr:'trainer',tIdx:0,tPick:null,tRes:null,tHint:false})}
+function startControl(){
+  if(S.tSolved.size<CASES.length){toast('Завершите тренажёр ('+S.tSolved.size+'/'+CASES.length+')','err');return}
+  set({scr:'control',cQ:0,cPick:null,cFB:false,cAns:{},cScore:null,cPassed:false});
+}
+function pickOpt(k,isE){isE?set({ePick:k}):set({cPick:k})}
+function confirmOpt(isE){
+  if(isE){const q=EQ[S.eQ];set({eFB:true,eAns:{...S.eAns,[q.id]:S.ePick}})}
+  else{const q=CQ[S.cQ];set({cFB:true,cAns:{...S.cAns,[q.id]:S.cPick}})}
+}
+function nextQ(isE){
+  if(isE){
+    if(S.eQ<EQ.length-1){set({eQ:S.eQ+1,ePick:null,eFB:false})}
+    else{const sc=scoreFn(S.eAns,EQ),p=sc>=60;set({eScore:sc,ePassed:p,scr:'res_e'});if(p)toast('Тест пройден! '+sc+'%');else toast('Не пройден: '+sc+'%','err')}
+  }else{
+    if(S.cQ<CQ.length-1){set({cQ:S.cQ+1,cPick:null,cFB:false})}
+    else{const sc=scoreFn(S.cAns,CQ),p=sc>=80;set({cScore:sc,cPassed:p,scr:'res_c'});if(p)toast('Допуск получен! '+sc+'%');else toast('Не пройден: '+sc+'%','err')}
+  }
+}
+function checkCase(){if(S.tPick===null)return;const c=CASES[S.tIdx],ok=S.tPick===c.a;if(ok){const ns=new Set(S.tSolved);ns.add(S.tIdx);toast('Верно! +1 кейс ✓','info');set({tRes:{ok},tSolved:ns})}else{toast('Неверно','err');set({tRes:{ok}})}}
+function nextCase(){S.tIdx<CASES.length-1?set({tIdx:S.tIdx+1,tPick:null,tRes:null,tHint:false}):set({tIdx:CASES.length})}
+function jumpCase(i){if(!S.tRes)set({tIdx:i,tPick:null,tRes:null,tHint:false})}
+function openLesson(i){set({lLesson:i,lCaseIdx:0,lCasePick:null,lCaseFB:false})}
+function pickLC(i){if(!S.lCaseFB)set({lCasePick:i})}
+function checkLC(){if(S.lCasePick===null)return;set({lCaseFB:true})}
+function nextLC(){set({lCaseIdx:S.lCaseIdx+1,lCasePick:null,lCaseFB:false})}
+function completeLesson(i){const ns=new Set(S.lCompleted);ns.add(i);set({lCompleted:ns});toast('Урок '+(i+1)+' изучен ✓','info')}
+
+// Keyboard support
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&['entry','control','trainer'].includes(S.scr))set({scr:'dash'});
+  if(['entry','control'].includes(S.scr)&&!S.eFB&&!S.cFB){
+    const map={1:'a',2:'b',3:'c',4:'d'};
+    if(map[e.key]){const isE=S.scr==='entry';isE?set({ePick:map[e.key]}):set({cPick:map[e.key]})}
+  }
+});
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function render(){
+  const screens={
+    landing:sLanding,login:sLogin,dash:sDash,
+    ea:sEA,entry:()=>sTest(true),control:()=>sTest(false),
+    res_e:()=>sResults(true),res_c:()=>sResults(false),
+    trainer:sTrainer,cert:sCert,learn:sLearn,
+    profile:sProfile,admin:sAdmin,
+    enrollments:sEnrollments,knowledge:sKnowledge,
+  };
+  document.getElementById('root').innerHTML=(screens[S.scr]||sLanding)();
+  window.scrollTo({top:0,behavior:'instant'});
+  if(typeof renderChat==='function')renderChat();
+  if(typeof renderNDOverlay==='function')renderNDOverlay();
+  if(S.scr==='landing')setTimeout(initAnim,30);
+}
+
+// ══ ЧАТА АССИСТЕНТ ═══════════════════════════════════════════════════════════
+let CS={open:false,msgs:[],loading:false,input:'',greeted:false,unread:0};
+
+const BOT={
+  greeting:{text:"Привет! 👋 Я ассистент платформы **Метролог.ПРО**.\n\nПомогу разобраться с программой обучения и отвечу на вопросы по поверке преобразователей плотности.\n\nС чего начнём?",
+    qr:[{l:"📚 О программе обучения",k:"about"},{l:"🎯 С чего начать?",k:"start"},{l:"📋 Что такое поверка ПЧ?",k:"what_is"},{l:"🚀 Войти и начать",k:"do_login"}]},
+  about:{text:"Программа обучения состоит из **4 этапов**:\n\n1️⃣ **Учебные материалы** — 10 уроков из НД (ГОСТ Р 8.802-2012, Приказ Минпромторга России №2905, РМГ 43)\n\n2️⃣ **Входное тестирование** — тест + самооценка по 7 разделам МИ 2816-2012\n\n3️⃣ **Тренажёр** — 30 кейсов с ошибками в протоколах\n\n4️⃣ **Контрольный тест** — итоговая аттестация, затем удостоверение 🏆",
+    qr:[{l:"📖 Об учебных материалах",k:"learn"},{l:"🔍 О тренажёре",k:"trainer"},{l:"🚀 Войти",k:"do_login"}]},
+  start:{text:"Рекомендую начать с **учебных материалов** 📚 — они подготовят к тестированию.\n\nПорядок:\n→ 10 уроков из НД\n→ Входное тестирование (тест + самооценка)\n→ Тренажёр (30 кейсов)\n→ Контрольный тест\n→ Удостоверение 🏆",
+    qr:[{l:"📚 К учебным материалам",k:"do_learn"},{l:"🚀 Войти",k:"do_login"}]},
+  what_is:{text:"**Поверка ПЧ** — подтверждение соответствия метрологических характеристик прибора нормативным требованиям.\n\nРегламентируется **ГОСТ Р 8.802-2012** и **МИ 2816-2012**.\n\nВключает: внешний осмотр, опробование, определение погрешности, вариации показаний.",
+    qr:[{l:"📚 О программе",k:"about"},{l:"❓ Что такое МПИ?",k:"mpi"},{l:"🚀 Войти",k:"do_login"}]},
+  learn:{text:"**10 уроков** из реальных НД:\n\n📋 ГОСТ Р 8.802-2012 — условия и методика\n📄 Приказ Минпромторга России №2905 — протоколы\n📊 РМГ 43-2001 — погрешности\n⚖️ ФЗ №102-ФЗ — МПИ и свидетельства\n\nКаждый урок: теория + практические кейсы.",
+    qr:[{l:"🚀 Войти и учиться",k:"do_login"}]},
+  trainer:{text:"**Тренажёр** — 30 кейсов из протоколов:\n• 20 общих ошибок в поверке\n• 10 кейсов по МИ 2816-2012\n\nНаходите ошибки вычислений, нарушения методики, дефекты оформления.",
+    qr:[{l:"🚀 Войти",k:"do_login"}]},
+  mpi:{text:"**МПИ** (межповерочный интервал) — промежуток между поверками.\n\nСтандартный ПЧ: **1 год**. Свидетельство прекращает действие при истечении МПИ или нарушении знаков поверки.",
+    qr:[{l:"📋 Ещё о поверке",k:"what_is"},{l:"🚀 Войти",k:"do_login"}]},
+  knowledge:{text:"**База знаний** содержит 3 ключевых НД:\n\n📗 МИ 2816-2012 — поверка на месте эксплуатации\n📘 ГОСТ Р 8.802-2012 — лабораторная методика\n📙 Приказ Минпромторга России №2905 — порядок поверки\n\nКаждый документ с разделами и нормативными ссылками.",
+    qr:[{l:"📚 Открыть базу знаний",k:"do_knowledge"},{l:"🚀 Войти",k:"do_login"}]},
+  do_login:{text:"Нажмите кнопку ниже для входа или регистрации. 😊",
+    qr:[{l:"Войти / Зарегистрироваться →",k:"_login"}]},
+  default:{text:"Я помогаю с вопросами по платформе и поверке ПЧ. Выберите тему:",
+    qr:[{l:"📚 О программе",k:"about"},{l:"🎯 С чего начать?",k:"start"},{l:"📋 Поверка ПЧ",k:"what_is"}]},
+};
+
+function chatGo(k){
+  if(k==='do_login'){set({scr:'login'});CS.open=false;}
+  else if(k==='do_learn'){set({scr:S.user?'learn':'login',lLesson:-1});CS.open=false;}
+  else if(k==='do_knowledge'){set({scr:S.user?'knowledge':'login',kbDoc:null});CS.open=false;}
+  else if(k==='_login'){set({scr:'login'});CS.open=false;}
+}
+function fmtMsg(t){return t.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');}
+function renderChat(){
+  const el=document.getElementById('chat-root');if(!el)return;
+  const qrs=CS.msgs.length>0&&!CS.loading?CS.msgs[CS.msgs.length-1].qr:[];
+  el.innerHTML=`
+    <button class="chat-fab ${CS.unread>0&&!CS.open?'unread':''}" onclick="toggleChat()" title="Ассистент" style="display:${CS.open?'none':'flex'}">✨</button>
+    <div class="chat-panel ${CS.open?'open':''}">
+      <div class="chat-hdr">
+        <div class="chat-av">✨</div>
+        <div class="chat-hdr-info"><div class="chat-nm">Ассистент</div><div class="chat-st">Онлайн · Метролог.ПРО</div></div>
+        <button class="chat-x" onclick="toggleChat()">✕</button>
+      </div>
+      <div class="chat-msgs" id="cmsg-list">
+        ${CS.msgs.map(m=>`<div class="cmsg ${m.r}">${m.r==='bot'?'<div class="cmsg-av">✨</div>':''}<div class="cbubble ${m.r}">${fmtMsg(m.t)}</div></div>`).join('')}
+        ${CS.loading?`<div class="cmsg bot"><div class="cmsg-av">✨</div><div class="chat-typing"><span></span><span></span><span></span></div></div>`:''}
+      </div>
+      ${qrs.length?`<div class="chat-qrs">${qrs.map(q=>`<button class="chat-qr" onclick="doQR('${q.k}','${q.l.replace(/'/g,"\\'")}')">${q.l}</button>`).join('')}</div>`:''}
+      <div class="chat-inp-row">
+        <input class="chat-inp" id="chat-input" placeholder="Написать…" value="${CS.input.replace(/"/g,'&quot;')}"
+          oninput="CS.input=this.value" onkeydown="if(event.key==='Enter'){event.preventDefault();doSend()}">
+        <button class="chat-snd" onclick="doSend()" ${CS.loading||!CS.input.trim()?'disabled':''}>↑</button>
+      </div>
+    </div>`;
+  const ml=document.getElementById('cmsg-list');
+  if(ml)ml.scrollTop=ml.scrollHeight;
+}
+function toggleChat(){
+  CS.open=!CS.open;CS.unread=0;
+  if(CS.open&&!CS.greeted){CS.greeted=true;CS.loading=true;renderChat();
+    setTimeout(()=>{CS.loading=false;CS.msgs.push({r:'bot',t:BOT.greeting.text,qr:BOT.greeting.qr});renderChat();},800);}
+  else renderChat();
+}
+function botReply(key){
+  const r=BOT[key]||BOT.default;CS.loading=true;renderChat();
+  setTimeout(()=>{CS.loading=false;CS.msgs.push({r:'bot',t:r.text,qr:r.qr||[]});
+    if(!CS.open)CS.unread++;chatGo(key);renderChat();},600+Math.random()*400);
+}
+function doQR(key,label){
+  if(CS.msgs.length)CS.msgs[CS.msgs.length-1].qr=[];
+  CS.msgs.push({r:'user',t:label,qr:[]});botReply(key);
+}
+function doSend(){
+  const msg=CS.input.trim();if(!msg||CS.loading)return;
+  if(CS.msgs.length)CS.msgs[CS.msgs.length-1].qr=[];
+  CS.msgs.push({r:'user',t:msg,qr:[]});CS.input='';renderChat();
+  const lc=msg.toLowerCase();
+  let key='default';
+  if(/программ|курс|этап/i.test(lc))key='about';
+  else if(/начал|начать|с чего/i.test(lc))key='start';
+  else if(/что такое|повер|пч|плотномер/i.test(lc))key='what_is';
+  else if(/учебн|материал|урок/i.test(lc))key='learn';
+  else if(/тренаж|ошибк/i.test(lc))key='trainer';
+  else if(/мпи|межповерочн/i.test(lc))key='mpi';
+  else if(/база знаний|норматив|нд/i.test(lc))key='knowledge';
+  else if(/войт|вход|регистр/i.test(lc))key='do_login';
+  botReply(key);
+}
+function maybeAutoGreet(){
+  if(S.scr==='landing'&&!CS.greeted){
+    setTimeout(()=>{if(S.scr!=='landing')return;
+      CS.open=true;CS.greeted=true;CS.loading=true;renderChat();
+      setTimeout(()=>{CS.loading=false;CS.msgs.push({r:'bot',t:BOT.greeting.text,qr:BOT.greeting.qr});renderChat();},1000);
+    },2200);
+  }
+}
+
+// ══ CANVAS АНИМАЦИЯ ЛЕНДИНГА (триколор) ══════════════════════════════════════
+let _animFrame=null;
+function initAnim(){
+  const canvas=document.getElementById('hero-anim');
+  if(!canvas)return;
+  if(_animFrame){cancelAnimationFrame(_animFrame);_animFrame=null;}
+  const ctx=canvas.getContext('2d');
+  let W=0,H=0;
+  function resize(){
+    const hero=document.getElementById('hero');
+    if(!hero)return;
+    W=canvas.width=hero.offsetWidth;
+    H=canvas.height=hero.offsetHeight;
+  }
+  resize();
+  try{const ro=new ResizeObserver(resize);ro.observe(document.getElementById('hero'));}catch(e){}
+
+  // ── 10 орбит — Apple Intelligence palette для триколора ───────────────────
+  const ORBS=[
+    // Глубокие синие (основа)
+    {bx:.22,by:.32,rf:.68,rx:1.0,ry:0.85,rgb:[0,45,140],   ph:[0.0,1.2],sp:[.20,.15],ar:0.30},
+    {bx:.72,by:.58,rf:.58,rx:0.9,ry:1.10,rgb:[0,75,210],   ph:[2.0,0.8],sp:[.17,.23],ar:-.40},
+    {bx:.48,by:.82,rf:.52,rx:1.2,ry:0.72,rgb:[10,100,250], ph:[4.5,2.5],sp:[.28,.17],ar:0.80},
+    // Алые и красные
+    {bx:.82,by:.22,rf:.50,rx:1.0,ry:1.00,rgb:[200,18,18],  ph:[3.5,1.5],sp:[.24,.19],ar:0.00},
+    {bx:.12,by:.68,rf:.44,rx:0.8,ry:1.30,rgb:[180,8,8],    ph:[1.5,3.5],sp:[.19,.28],ar:-.60},
+    // Индиго / фиолет (переход)
+    {bx:.62,by:.18,rf:.42,rx:1.1,ry:0.90,rgb:[55,25,175],  ph:[5.2,0.9],sp:[.14,.27],ar:0.50},
+    // Светло-голубой (яркость, воздух)
+    {bx:.33,by:.72,rf:.38,rx:1.3,ry:0.80,rgb:[90,155,255], ph:[0.8,4.0],sp:[.23,.15],ar:-.30},
+    // Тёмно-синий (глубина)
+    {bx:.55,by:.42,rf:.46,rx:0.7,ry:1.20,rgb:[0,12,55],    ph:[2.8,1.1],sp:[.11,.21],ar:0.90},
+    // Розово-алый (тёплый акцент)
+    {bx:.88,by:.78,rf:.36,rx:1.0,ry:1.00,rgb:[235,45,75],  ph:[1.0,2.0],sp:[.26,.13],ar:0.00},
+    // Тёмно-красный (насыщенность)
+    {bx:.06,by:.28,rf:.32,rx:0.9,ry:0.90,rgb:[155,0,0],    ph:[3.8,4.8],sp:[.15,.25],ar:0.20},
+  ];
+
+  const DRIFT=0.20, PULSE=0.09, SPEED=0.0018;
+  let t=0;
+
+  function draw(){
+    if(!W||!H){_animFrame=requestAnimationFrame(draw);return;}
+    ctx.clearRect(0,0,W,H);
+
+    ORBS.forEach((orb,i)=>{
+      const sx=Math.sin(t*orb.sp[0]+orb.ph[0]);
+      const sy=Math.cos(t*orb.sp[1]+orb.ph[1]);
+      const cx=(orb.bx+sx*DRIFT)*W;
+      const cy=(orb.by+sy*DRIFT)*H;
+      const baseR=orb.rf*Math.min(W,H)*0.68;
+      const r=baseR*(1+Math.sin(t*0.55+i*0.9)*PULSE);
+      const ang=orb.ar+t*0.06;
+
+      ctx.save();
+      ctx.translate(cx,cy);
+      ctx.rotate(ang);
+      ctx.scale(orb.rx,orb.ry);
+
+      const g=ctx.createRadialGradient(0,0,0,0,0,r);
+      const [rv,gv,b]=orb.rgb;
+      g.addColorStop(0.00,`rgba(${rv},${gv},${b},0.85)`);
+      g.addColorStop(0.25,`rgba(${rv},${gv},${b},0.60)`);
+      g.addColorStop(0.55,`rgba(${rv},${gv},${b},0.25)`);
+      g.addColorStop(0.80,`rgba(${rv},${gv},${b},0.07)`);
+      g.addColorStop(1.00,`rgba(${rv},${gv},${b},0.00)`);
+
+      ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+      ctx.restore();
+    });
+
+    // Мягкая виньетка по краям
+    const vx=ctx.createRadialGradient(W*.5,H*.5,H*.15,W*.5,H*.5,H*.95);
+    vx.addColorStop(0,'rgba(255,255,255,0)');
+    vx.addColorStop(1,'rgba(255,255,255,0.52)');
+    ctx.fillStyle=vx;ctx.fillRect(0,0,W,H);
+
+    t+=SPEED;
+    _animFrame=requestAnimationFrame(draw);
+  }
+
+  canvas.classList.remove('ready');
+  requestAnimationFrame(()=>{canvas.classList.add('ready');draw();});
+}
+
+render();
+maybeAutoGreet();
+</script></body></html>
